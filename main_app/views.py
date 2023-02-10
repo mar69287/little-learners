@@ -1,7 +1,8 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from .models import Teacher, Guardian
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from .models import Teacher, Guardian, Child
 
 
 # Create your views here.
@@ -19,6 +20,13 @@ def guardians_index(request):
    print(guardians)
    return render(request,'guardians/index.html',{'guardians': guardians})
 
+class ChildCreate(CreateView):
+  model = Child
+  fields = ['name', 'DoB', 'gender', 'age']
+
+  def form_valid(self, form):
+    form.instance.user = self.request.user
+    return super().form_valid(form)
 def login_view(request):
     error_message = ''
     if request.method == 'POST':
