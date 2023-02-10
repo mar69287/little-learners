@@ -30,3 +30,6 @@ class Child(models.Model):
 
   def __str__(self):
         return self.name
+
+  def get_absolute_url(self):
+    return reverse('guardians_index', kwargs ={'pk': self.id})
