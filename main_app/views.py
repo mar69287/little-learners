@@ -1,7 +1,8 @@
 from django.contrib.auth import authenticate, login
+from django.views.generic.edit import CreateView
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from .models import Teacher, Guardian
+from .models import Teacher, Guardian, Child
 
 
 # Create your views here.
@@ -42,3 +43,11 @@ def login_view(request):
             context = {'form': form, 'error_message': error_message}
     else:
         return render(request, 'login.html')
+
+class ChildCreate(CreateView):
+    model = Child
+    fields = ['name', 'gender', 'DoB', 'allergies']
+
+    def form_valid(self, form):
+        form.instance.guardian = Guardian.objects.get(user=self.request.user)
+        return super().form_valid(form)
