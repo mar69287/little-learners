@@ -26,6 +26,7 @@ class Child(models.Model):
   gender = models.CharField(max_length=10)
   DoB = models.DateField()
   allergies = models.CharField(max_length=100)
+  guardians = models.ManyToManyField(Guardian)
 
   def __str__(self):
         return self.name
