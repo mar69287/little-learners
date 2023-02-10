@@ -57,5 +57,5 @@ class ChildCreate(CreateView):
     fields = ['name', 'gender', 'DoB', 'allergies']
 
     def form_valid(self, form):
-        form.instance.guardian = Guardian.objects.get(user=self.request.user)
+        form.instance.guardian = Guardian.objects.filter(user=self.request.user)
         return super().form_valid(form)
