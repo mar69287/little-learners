@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Teachers</h1>
+
+{% for teacher in teachers %}
+
+    <div class="card">
+      <div class="card-content">
+        <span class="card-title">{{ teacher.name }}</span>
+    
+      </div>
+    </div>
+
+{% endfor %}
+
+{% endblock %}
