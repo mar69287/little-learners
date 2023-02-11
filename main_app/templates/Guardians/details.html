@@ -27,6 +27,12 @@
                    <span>{{child.name}}</span> <br> DoB: {{ child.DoB }}
                 </span>
               </div>
+              <div class="card-action">
+                <form action="{% url 'remove_child' guardian.id child.id %}" method="POST">
+                  {% csrf_token %}
+                  <button type="submit" class="btn">Remove</button>
+                </form>
+              </div>
             </div>
           {% endfor %}
         {% else %}
@@ -44,7 +50,12 @@
                     <span>{{child.name}}</span> <br> DoB: {{ child.DoB }}
                 </span>
               </div>
-        
+              <div class="card-action">
+                <form action="{% url 'assoc_child' guardian.id child.id %}" method="POST">
+                  {% csrf_token %}
+                  <button type="submit" class="btn">Add</button>
+                </form>
+              </div>
             </div>
           {% endfor %}
         {% else %}
