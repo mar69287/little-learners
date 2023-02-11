@@ -14,9 +14,7 @@ def teachers_index(request):
   teachers = Teacher.objects.filter(user=request.user)
   students = Child.objects.filter(teacher=request.user)
   print(teachers)
-  students = Child.objects.filter(teacher=request.user)
-
-
+  return render(request,'teachers/index.html',{'teachers': teachers, 'students': students})
 
 def guardians_index(request):
    guardians = Guardian.objects.all()
@@ -25,11 +23,17 @@ def guardians_index(request):
 
 def guardians_detail(request, guardian_id):
   guardian = Guardian.objects.get(id=guardian_id)
-  id_list = guardian.toys.all().values_list('id')
-  print(id_list)
-  return render(request, 'guardians/detail.html', {
+  return render(request, 'guardians/details.html', {
     'guardian': guardian
   })
+
+def dashboard(request):
+  user = request.user
+  if hasattr(user, 'teacher'):
+    return redirect('teachers_index')
+  elif hasattr(user, 'guardian'):
+    return redirect('guardians_index')
+
 
 class ChildCreate(CreateView):
   model = Child
@@ -38,22 +42,18 @@ class ChildCreate(CreateView):
   def form_valid(self, form):
     form.instance.user = self.request.user
     return super().form_valid(form)
+
 def login_view(request):
     error_message = ''
     if request.method == 'POST':
-        print("i have reached post method of login")
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
-        print(user)
         if user is not None:
             login(request, user)
-            print("i am in user is not none")
             if hasattr(user, 'teacher'):
-              print("i am a teacher")
               return redirect('teachers_index')
             elif hasattr(user, 'guardian'):
-              print("i am a guardian")
               return redirect('guardians_index')
         else:
             error_message = 'Invalid login - try again'
