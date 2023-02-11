@@ -3,6 +3,7 @@ from django.views.generic.edit import CreateView
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView
 from .models import Teacher, Guardian, Child
 
 
@@ -39,14 +40,6 @@ def dashboard(request):
     return redirect('guardians_index')
 
 
-class ChildCreate(CreateView):
-  model = Child
-  fields = ['name', 'DoB', 'gender', 'age']
-
-  def form_valid(self, form):
-    form.instance.user = self.request.user
-    return super().form_valid(form)
-
 def login_view(request):
     error_message = ''
     if request.method == 'POST':
@@ -74,6 +67,25 @@ class ChildCreate(CreateView):
       form.instance.teacher = self.request.user
       return super().form_valid(form)
 
+class ChildList(ListView):
+  model = Child
 
-class 
+class ChildDetail(DetailView):
+  model = Child
 
+class ChildUpdate(UpdateView):
+  model = Child
+  fields = ['name', 'gender', 'DoB', 'allergies']
+
+class ChildDelete(DeleteView):
+  model = Child
+  success_url = '/children'
+
+def assoc_child(request, cat_id, toy_id):
+  Guardian.objects.get(id=guardian_id).children.add(child_id)
+  return redirect('teachers_detail', guardian_id=guardian_id)
+
+def remove_child(request, cat_id, toy_id):
+  # Note that you can pass a toy's id instead of the whole toy object
+  Cat.objects.get(id=guardian_id).toys.remove(child_id)
+  return redirect('teachers_detail', guardian_id=guardian_id)
