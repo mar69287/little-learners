@@ -81,11 +81,10 @@ class ChildDelete(DeleteView):
   model = Child
   success_url = '/children'
 
-def assoc_child(request, cat_id, toy_id):
+def assoc_child(request, guardian_id, child_id):
   Guardian.objects.get(id=guardian_id).children.add(child_id)
   return redirect('teachers_detail', guardian_id=guardian_id)
 
-def remove_child(request, cat_id, toy_id):
-  # Note that you can pass a toy's id instead of the whole toy object
-  Cat.objects.get(id=guardian_id).toys.remove(child_id)
+def remove_child(request, guardian_id, child_id):
+  Guardian.objects.get(id=guardian_id).children.remove(child_id)
   return redirect('teachers_detail', guardian_id=guardian_id)
