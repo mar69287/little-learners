@@ -5,14 +5,14 @@
 <h1>Guardians</h1>
 
 {% for guardian in guardians %}
-
+<a href="{% url 'guardians_detail' guardian.id %}">
     <div class="card">
       <div class="card-content">
         <span class="card-title">{{ guardian.name }}</span>
     
       </div>
     </div>
-
+</a>
 {% endfor %}
 
  
