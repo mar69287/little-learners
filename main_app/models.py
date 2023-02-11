@@ -8,6 +8,19 @@ class Teacher(models.Model):
 
   def __str__(self):
         return self.name
+
+class Child(models.Model):
+  name = models.CharField(max_length=100)
+  gender = models.CharField(max_length=10)
+  DoB = models.DateField()
+  allergies = models.CharField(max_length=100)
+  teacher = models.ForeignKey(User, on_delete=models.CASCADE)
+
+  def __str__(self):
+        return self.name
+
+  def get_absolute_url(self):
+    return reverse('teachers_index')
     
 class Guardian(models.Model):
   name =  models.CharField(max_length=100)
@@ -22,15 +35,3 @@ class Guardian(models.Model):
   def __str__(self):
      return self.name
   
-class Child(models.Model):
-  name = models.CharField(max_length=100)
-  gender = models.CharField(max_length=10)
-  DoB = models.DateField()
-  allergies = models.CharField(max_length=100)
-  teacher = models.ForeignKey(User, on_delete=models.CASCADE)
-
-  def __str__(self):
-        return self.name
-
-  def get_absolute_url(self):
-    return reverse('teachers_index')
