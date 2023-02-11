@@ -23,8 +23,10 @@ def guardians_index(request):
 
 def guardians_detail(request, guardian_id):
   guardian = Guardian.objects.get(id=guardian_id)
+  id_list = guardian.children.all().values_list('id')
   return render(request, 'guardians/details.html', {
-    'guardian': guardian
+    'guardian': guardian,
+    'children': children
   })
 
 def dashboard(request):
