@@ -14,8 +14,7 @@ urlpatterns = [
     path('guardians/<int:guardian_id>/remove_child/<int:child_id>/', views.remove_child, name='remove_child'),
     path('children/create/', views.ChildCreate.as_view(), name='children_create'),
     path('children/', views.ChildList.as_view(), name='children_index'),
-    # path('children/<int:pk>/', views.ChildDetail.as_view(), name='children_detail'),
-    path('children/<int:child_id>/', views.children_detail, name='children_detail'),
+    path('children/<int:pk>/', views.ChildDetail.as_view(), name='children_detail'),
     path('children/<int:pk>/update/', views.ChildUpdate.as_view(), name='children_update'),
     path('children/<int:pk>/delete/', views.ChildDelete.as_view(), name='children_delete'),
 ]

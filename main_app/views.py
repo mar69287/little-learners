@@ -69,17 +69,14 @@ class ChildCreate(CreateView):
 class ChildList(ListView):
   model = Child
 
-# class ChildDetail(DetailView):
-#   model = Child
+class ChildDetail(DetailView):
+    model = Child
 
-def children_detail(request, child_id):
-  child = Child.objects.get(id=child_id)
-  id_list = child.guardians.all().values_list('id')
-  guardians_child_doesnt_have = Guardian.objects.exclude(id__in=id_list)
-  return render(request, 'children/details.html', {
-    'child': child,
-    'guardians': guardians_child_doesnt_have
-  })
+    def get_context_data(self, **kwargs):
+      context = super().get_context_data(**kwargs)
+      context['guardians'] = self.object.guardian_set.all()
+      return context
+
 
 class ChildUpdate(UpdateView):
   model = Child
