@@ -21,12 +21,12 @@
 <div class="row">
   <div class="col s6">
     <h3>{{ child.name}}'s Parents</h3>
-    {% if child.guardian.count %}
-      {% for child in guardian.children.all %}
+    {% if guardians %}
+    {% for guardian in guardians %}
         <div class="card">
           <div class="card-content">
             <span class="card-title">
-              <span >{{ child.name }}</span> 
+              <span >{{ guardian.name }}</span> 
             </span>
           </div>
         </div>
