@@ -17,6 +17,7 @@ class Guardian(models.Model):
   state = models.CharField(max_length=100)
   zip_code = models.CharField(max_length=5)
   user = models.OneToOneField(User, on_delete=models.CASCADE)
+  children = models.ManyToManyField(Child)
 
   def __str__(self):
      return self.name
@@ -26,7 +27,6 @@ class Child(models.Model):
   gender = models.CharField(max_length=10)
   DoB = models.DateField()
   allergies = models.CharField(max_length=100)
-  guardians = models.ManyToManyField(Guardian)
   teacher = models.ForeignKey(User, on_delete=models.CASCADE)
 
   def __str__(self):
