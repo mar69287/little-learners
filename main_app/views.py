@@ -17,7 +17,7 @@ def teachers_index(request):
   return render(request, 'teachers/index.html', {'teachers': teachers})
 
 def guardians_index(request):
-   guardians = Guardian.objects.filter(user=request.user)
+   guardians = Guardian.objects.all()
    print(guardians)
    return render(request,'guardians/index.html',{'guardians': guardians})
 
@@ -57,6 +57,6 @@ class ChildCreate(CreateView):
     fields = ['name', 'gender', 'DoB', 'allergies']
 
     def form_valid(self, form):
-      form.save()
       form.instance.teacher = self.request.user
       return super().form_valid(form)
+

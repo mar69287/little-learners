@@ -8,7 +8,7 @@ class Teacher(models.Model):
 
   def __str__(self):
         return self.name
-
+    
 class Guardian(models.Model):
   name =  models.CharField(max_length=100)
   relationship = models.CharField(max_length=100)
@@ -19,8 +19,8 @@ class Guardian(models.Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE)
 
   def __str__(self):
-        return self.name
-
+     return self.name
+  
 class Child(models.Model):
   name = models.CharField(max_length=100)
   gender = models.CharField(max_length=10)
