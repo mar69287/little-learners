@@ -26,7 +26,6 @@ def guardians_detail(request, guardian_id):
   guardian = Guardian.objects.get(id=guardian_id)
   id_list = guardian.children.all().values_list('id')
   children_guarduan_doesnt_have = Child.objects.exclude(id__in=id_list)
-  print(children_guarduan_doesnt_have)
   return render(request, 'guardians/details.html', {
     'guardian': guardian,
     'children': children_guarduan_doesnt_have
@@ -70,8 +69,17 @@ class ChildCreate(CreateView):
 class ChildList(ListView):
   model = Child
 
-class ChildDetail(DetailView):
-  model = Child
+# class ChildDetail(DetailView):
+#   model = Child
+
+def children_detail(request, child_id):
+  child = Child.objects.get(id=child_id)
+  id_list = child.guardians.all().values_list('id')
+  guardians_child_doesnt_have = Guardian.objects.exclude(id__in=id_list)
+  return render(request, 'children/details.html', {
+    'child': child,
+    'guardians': guardians_child_doesnt_have
+  })
 
 class ChildUpdate(UpdateView):
   model = Child
@@ -83,9 +91,8 @@ class ChildDelete(DeleteView):
 
 def assoc_child(request, guardian_id, child_id):
   Guardian.objects.get(id=guardian_id).children.add(child_id)
-  return redirect('teachers_detail', guardian_id=guardian_id)
+  return redirect('guardians_detail', guardian_id=guardian_id)
 
 def remove_child(request, guardian_id, child_id):
   Guardian.objects.get(id=guardian_id).children.remove(child_id)
   return redirect('teachers_detail', guardian_id=guardian_id)
-

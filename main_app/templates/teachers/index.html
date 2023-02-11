@@ -16,14 +16,13 @@
 
 <h1>Students</h1>
 {% for student in students %}
-
+  <a href="{% url 'children_detail' student.id %}">
     <div class="card">
       <div class="card-content">
         <span class="card-title">{{ student.name }}</span>
-    
       </div>
     </div>
-
+  </a>
 {% endfor %}
 
 {% endblock %}
