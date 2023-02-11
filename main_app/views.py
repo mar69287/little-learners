@@ -12,14 +12,23 @@ def home(request):
 
 def teachers_index(request):
   teachers = Teacher.objects.filter(user=request.user)
+  students = Child.objects.filter(teacher=request.user)
   print(teachers)
 
-  return render(request, 'teachers/index.html', {'teachers': teachers})
+  return render(request, 'teachers/index.html', {'teachers': teachers, 'students': students})
 
 def guardians_index(request):
    guardians = Guardian.objects.all()
    print(guardians)
    return render(request,'guardians/index.html',{'guardians': guardians})
+
+def guardians_detail(request, guardian_id):
+  guardian = Guardian.objects.get(id=guardian_id)
+  id_list = guardian.toys.all().values_list('id')
+  print(id_list)
+  return render(request, 'guardians/detail.html', {
+    'guardian': guardian
+  })
 
 class ChildCreate(CreateView):
   model = Child

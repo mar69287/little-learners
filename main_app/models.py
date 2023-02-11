@@ -33,4 +33,4 @@ class Child(models.Model):
         return self.name
 
   def get_absolute_url(self):
-    return reverse('teachers_index', kwargs ={'pk': self.id})
+    return reverse('teachers_index')

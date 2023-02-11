@@ -14,4 +14,16 @@
 
 {% endfor %}
 
+<h1>Students</h1>
+{% for student in students %}
+
+    <div class="card">
+      <div class="card-content">
+        <span class="card-title">{{ student.name }}</span>
+    
+      </div>
+    </div>
+
+{% endfor %}
+
 {% endblock %}
