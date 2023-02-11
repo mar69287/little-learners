@@ -14,4 +14,46 @@
         </div>
     </div>
     </div>
+
+    <hr>
+    <div class="row">
+      <div class="col s6">
+        <h3>{{ guardian.name }}'s Children</h3>
+        {% if guardian.children.count %}
+          {% for child in guardian.children.all %}
+            <div class="card">
+              <div class="card-content">
+                <span class="card-title">
+                   <span>{{child.name}}</span> <br> DoB: {{ child.DoB }}
+                </span>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <h5>No Children</h5>
+        {% endif %}
+      </div>
+
+      <div class="col s6">
+        <h3>Available Children</h3>
+        {% if children.count %}
+          {% for child in children.all %}
+            <div class="card">
+              <div class="card-content">
+                <span class="card-title">
+                    <span>{{child.name}}</span> <br> DoB: {{ child.DoB }}
+                </span>
+              </div>
+        
+            </div>
+          {% endfor %}
+        {% else %}
+          <h5>{{guardian.name}} All my kids</h5>
+        {% endif %}
+      </div>
+    </div>
+      
+    
+
+
   {% endblock %}
