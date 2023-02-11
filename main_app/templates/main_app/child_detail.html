@@ -8,7 +8,6 @@
     <div class="card">
       <div class="card-content">
         <span class="card-title">{{ child.name }}</span>
-        <p>name: {{ child.name }}</p>
       </div>
       <div class="card-action">
         <a href="{% url 'children_update' child.id %}">Edit</a>
@@ -17,4 +16,23 @@
     </div>
   </div>
 </div>
+
+<hr>
+<div class="row">
+  <div class="col s6">
+    <h3>{{ child.name}}'s Parents</h3>
+    {% if child.guardian.count %}
+      {% for child in guardian.children.all %}
+        <div class="card">
+          <div class="card-content">
+            <span class="card-title">
+              <span >{{ child.name }}</span> 
+            </span>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <h5>No Parents 😿</h5>
+    {% endif %}
+  </div>
 {% endblock %}
