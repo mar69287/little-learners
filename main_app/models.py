@@ -27,9 +27,10 @@ class Child(models.Model):
   DoB = models.DateField()
   allergies = models.CharField(max_length=100)
   guardians = models.ManyToManyField(Guardian)
+  teacher = models.ForeignKey(User, on_delete=models.CASCADE)
 
   def __str__(self):
         return self.name
 
   def get_absolute_url(self):
-    return reverse('guardians_index', kwargs ={'pk': self.id})
+    return reverse('teachers_index', kwargs ={'pk': self.id})
