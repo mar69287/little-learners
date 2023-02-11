@@ -24,9 +24,11 @@ def guardians_index(request):
 def guardians_detail(request, guardian_id):
   guardian = Guardian.objects.get(id=guardian_id)
   id_list = guardian.children.all().values_list('id')
+  children_guarduan_doesnt_have = Child.objects.exclude(id__in=id_list)
+  print(children_guarduan_doesnt_have)
   return render(request, 'guardians/details.html', {
     'guardian': guardian,
-    'children': children
+    'children': children_guarduan_doesnt_have
   })
 
 def dashboard(request):
