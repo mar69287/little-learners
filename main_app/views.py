@@ -58,7 +58,5 @@ class ChildCreate(CreateView):
 
     def form_valid(self, form):
       form.save()
-      child = form.instance
-      guardian = Guardian.objects.get(user=self.request.user)
-      guardian.children.add(child)
+      form.instance.teacher = self.request.user
       return super().form_valid(form)
