@@ -60,7 +60,7 @@ def login_view(request):
 class ChildCreate(CreateView):
     model = Child
     fields = ['name', 'gender', 'DoB', 'allergies']
-
+    
     def form_valid(self, form):
       form.instance.teacher = self.request.user
       return super().form_valid(form)
@@ -70,12 +70,11 @@ class ChildList(ListView):
 
 class ChildDetail(DetailView):
     model = Child
-
     def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)
       context['guardians'] = self.object.guardian_set.all()
       return context
-
+  
 
 class ChildUpdate(UpdateView):
   model = Child
