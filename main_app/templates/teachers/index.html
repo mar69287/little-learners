@@ -21,8 +21,12 @@
         <span class="card-title">{{ student.name }}</span>
       </div>
       <div class="card-action">
-        <a href="{% url 'attendance' student.id 'present' %}">Present</a>
-        <a href="{% url 'attendance' student.id 'absent' %}">Absent</a>
+        {% if not student.attendance_today %}
+          <a href="{% url 'attendance' student.id 'present' %}">Present</a>
+          <a href="{% url 'attendance' student.id 'absent' %}">Absent</a>
+        {% else %}
+          <p>Attendance already marked</p>
+        {% endif %}
       </div>
     </div>
   </a>
