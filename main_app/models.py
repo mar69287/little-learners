@@ -110,5 +110,3 @@ class Assessment(models.Model):
 
 def __str__(self):
       return f"{self.get_behavior_display()} on {self.date}"
-
-
