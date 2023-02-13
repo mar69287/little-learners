@@ -1,7 +1,43 @@
 from django.db import models
 from django.urls import reverse
+from datetime import date
 from django.contrib.auth.models import User
+from django.utils import timezone
 
+
+MEALS = (
+  ('B', 'Breakfast - 9:00 am - 9:30 am'),
+  ('L', 'Lunch - 12:00 pm - 12:30 pm'),
+  ('S', 'Snack - 2:00 pm - 2:30 pm'),
+  
+)
+
+ATE = (
+    ('N', 'No'),
+    ('Y', 'Yes')
+)
+
+ACTIONS = (
+  ('C', 'Coloring'),
+  ('M', 'Music'),
+  ('N', 'Nap'),
+  ('R', 'Reading'),
+  ('P', 'Play'),
+  ('W', 'Writing'),
+  
+)
+
+STATUS = (
+  ('A','Absent'),
+  ('P','Present'),
+
+)
+
+BEHAVIOR = (
+   ('B','Bad'),
+   ('G','Good'),
+   ('O','Okay'),
+)
 class Teacher(models.Model):
   name = models.CharField(max_length=100)
   user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -35,3 +71,52 @@ class Guardian(models.Model):
   def __str__(self):
      return self.name
   
+class Activity(models.Model):
+   action = models.CharField(
+      max_length=1,
+      choices=ACTIONS,
+      default=ACTIONS[0][0]
+   )
+   start_time = models.DateTimeField(blank=True, null=True, default=timezone.now)
+   end_time = models.DateTimeField(blank=True, null=True, )
+   comment = models.CharField(max_length=250)
+
+   def __str__(self):
+      return f"{self.get_action_display()} from {self.start_time} to {self.end_time}"
+   
+class Feeding(models.Model):
+  meal = models.CharField(
+    max_length=1,
+    choices=MEALS,
+    default=MEALS[0][0]
+  ),
+  did_eat= models.CharField(
+    max_length=1,
+    choices=ATE,
+    default=ATE[1][0]
+  ),
+  def __str__(self):
+    return f"child at {self.get_meal_display()} ate? {self.get_did_eat_display()}"
+
+class Attendance(models.Model):
+   date = models.DateField('Attendance date') 
+   status = models.CharField(
+      max_length=1,
+      choices=STATUS,
+      default=STATUS[1][0]
+  )
+def __str__(self):
+      return f"{self.get_status_display()} on {self.date}"
+
+class Assessment(models.Model):
+  behavior = models.CharField(
+     max_length=1,
+     choices=BEHAVIOR,
+     default=BEHAVIOR[1][0]
+  )
+  date = models.DateField('Behavior date')
+
+def __str__(self):
+      return f"{self.get_behavior_display()} on {self.date}"
+
+
