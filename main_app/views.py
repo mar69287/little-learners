@@ -19,7 +19,6 @@ def teachers_index(request):
 
 def guardians_index(request):
   guardians = Guardian.objects.all()
-  
   return render(request,'guardians/index.html',{'guardians': guardians})
 
 def guardians_detail(request, guardian_id):
@@ -42,7 +41,7 @@ def dashboard(request):
 def login_view(request):
     error_message = ''
     if request.method == 'POST':
-        username = request.POST['username']
+        username = request.POST['username'] 
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
         if user is not None:
