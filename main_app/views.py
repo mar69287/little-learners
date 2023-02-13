@@ -7,6 +7,8 @@ from django.views.generic import ListView, DetailView
 from .models import Teacher, Guardian, Child, Attendance
 
 
+
+
 # Create your views here.
 def home(request):
   return render(request, 'home.html')
