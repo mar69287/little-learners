@@ -19,7 +19,6 @@ def teachers_index(request):
 
 def guardians_index(request):
   guardians = Guardian.objects.all(user=request.user)
-  
   return render(request,'guardians/index.html',{'guardians': guardians})
 
 def guardians_detail(request, guardian_id):
