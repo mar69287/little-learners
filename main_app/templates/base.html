@@ -21,14 +21,17 @@
                 <ul class="right">
 
                     {% if user.is_authenticated %}
-                    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
-                    <li><a href="{% url 'children_create' %}">Add Child</a></li>
-                    <li><a href="{% url 'children_index' %}">View All Children</a></li>
-                    <li><a href="{% url 'guardians_index' %}">guardian</a></li>
-                    <li><a href="{% url 'logout' %}">Log Out</a></li>
-                    {% else %}
-
-                    
+                        {% if user.guardian %}
+                        <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                        <li><a href="{% url 'logout' %}">Log Out</a></li>
+                        {% else %}
+                        <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                        <li><a href="{% url 'children_create' %}">Add Child</a></li>
+                        <li><a href="{% url 'children_index' %}">View All Children</a></li>
+                        <li><a href="{% url 'guardians_index' %}">guardian</a></li>
+                        <li><a href="{% url 'logout' %}">Log Out</a></li>
+                        {% endif %}
+                    {% else %}                   
                     <li><a href="{% url 'login' %}">Login</a></li>
                     {% endif %}
                   </ul>
