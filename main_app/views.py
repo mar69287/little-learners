@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
-from .models import Teacher, Guardian, Child
+from .models import Teacher, Guardian, Child, Attendance
 
 
 # Create your views here.
@@ -91,3 +91,9 @@ def assoc_child(request, guardian_id, child_id):
 def remove_child(request, guardian_id, child_id):
   Guardian.objects.get(id=guardian_id).children.remove(child_id)
   return redirect('guardians_detail', guardian_id=guardian_id)
+
+def attendance(request, child_id, status):
+  child = Child.objects.get(id=child_id)
+  attendance = Attendance(child=child, status=status)
+  attendance.save()
+  return redirect('teachers_index')
