@@ -27,12 +27,14 @@
                    <span>{{child.name}}</span> <br> DoB: {{ child.DoB }}
                 </span>
               </div>
+              {% if user.teacher %}
               <div class="card-action">
                 <form action="{% url 'remove_child' guardian.id child.id %}" method="POST">
                   {% csrf_token %}
                   <button type="submit" class="btn">Remove</button>
                 </form>
               </div>
+              {% endif %}
             </div>
           {% endfor %}
         {% else %}
@@ -40,6 +42,8 @@
         {% endif %}
       </div>
 
+
+      {% if user.teacher %}
       <div class="col s6">
         <h3>Available Children</h3>
         {% if children.count %}
@@ -62,7 +66,8 @@
           <h5>{{guardian.name}} All my kids</h5>
         {% endif %}
       </div>
-    </div>
+    </div>     
+      {% endif %}
       
     
 

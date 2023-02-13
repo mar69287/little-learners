@@ -36,7 +36,7 @@ def dashboard(request):
   if hasattr(user, 'teacher'):
     return redirect('teachers_index')
   elif hasattr(user, 'guardian'):
-    return redirect('guardians_index')
+     return redirect('guardians_detail', guardian_id=user.guardian.id)
 
 
 def login_view(request):
@@ -50,7 +50,7 @@ def login_view(request):
             if hasattr(user, 'teacher'):
               return redirect('teachers_index')
             elif hasattr(user, 'guardian'):
-              return redirect('guardians_index')
+              return redirect('guardians_detail', guardian_id=user.guardian.id)
         else:
             error_message = 'Invalid login - try again'
             return render(request, 'login.html')
