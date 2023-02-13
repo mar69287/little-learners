@@ -17,4 +17,5 @@ urlpatterns = [
     path('children/<int:pk>/', views.ChildDetail.as_view(), name='children_detail'),
     path('children/<int:pk>/update/', views.ChildUpdate.as_view(), name='children_update'),
     path('children/<int:pk>/delete/', views.ChildDelete.as_view(), name='children_delete'),
+    path('attendance/<int:child_id>/<str:status>/', views.attendance, name='attendance'),
 ]
