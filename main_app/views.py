@@ -12,13 +12,14 @@ def home(request):
   return render(request, 'home.html')
 
 def teachers_index(request):
-  teachers = Teacher.objects.filter(user=request.user)
+  teacher = Teacher.objects.filter(user=request.user)
   students = Child.objects.filter(teacher=request.user)
-  print(teachers)
-  return render(request,'teachers/index.html',{'teachers': teachers, 'students': students})
+  print(teacher)
+  return render(request,'teachers/index.html',{'teacher': teacher, 'students': students})
 
 def guardians_index(request):
   guardians = Guardian.objects.all(user=request.user)
+  guardians = Guardian.objects.all()
   return render(request,'guardians/index.html',{'guardians': guardians})
 
 def guardians_detail(request, guardian_id):
@@ -41,7 +42,7 @@ def dashboard(request):
 def login_view(request):
     error_message = ''
     if request.method == 'POST':
-        username = request.POST['username']
+        username = request.POST['username'] 
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
         if user is not None:

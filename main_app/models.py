@@ -27,12 +27,6 @@ ACTIONS = (
   
 )
 
-STATUS = (
-  ('A','Absent'),
-  ('P','Present'),
-
-)
-
 BEHAVIOR = (
    ('B','Bad'),
    ('G','Good'),
@@ -99,14 +93,12 @@ class Feeding(models.Model):
     return f"child at {self.get_meal_display()} ate? {self.get_did_eat_display()}"
 
 class Attendance(models.Model):
-   date = models.DateField('Attendance date') 
-   status = models.CharField(
-      max_length=1,
-      choices=STATUS,
-      default=STATUS[1][0]
-  )
-def __str__(self):
-      return f"{self.get_status_display()} on {self.date}"
+  child = models.ForeignKey(Child, on_delete=models.CASCADE)
+  date = models.DateField(auto_now_add=True) 
+  status = models.CharField(max_length=10)
+
+  def __str__(self):
+    return f"{self.status} on {self.date}"
 
 class Assessment(models.Model):
   behavior = models.CharField(
