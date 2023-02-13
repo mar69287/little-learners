@@ -92,4 +92,4 @@ def assoc_child(request, guardian_id, child_id):
 
 def remove_child(request, guardian_id, child_id):
   Guardian.objects.get(id=guardian_id).children.remove(child_id)
-  return redirect('teachers_detail', guardian_id=guardian_id)
+  return redirect('guardians_detail', guardian_id=guardian_id)
