@@ -18,9 +18,9 @@ def teachers_index(request):
   return render(request,'teachers/index.html',{'teachers': teachers, 'students': students})
 
 def guardians_index(request):
-   guardians = Guardian.objects.all()
-   print(guardians)
-   return render(request,'guardians/index.html',{'guardians': guardians})
+  guardians = Guardian.objects.all(user=request.user)
+  
+  return render(request,'guardians/index.html',{'guardians': guardians})
 
 def guardians_detail(request, guardian_id):
   guardian = Guardian.objects.get(id=guardian_id)
