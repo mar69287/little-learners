@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
+from datetime import date
 from .models import Teacher, Guardian, Child, Attendance
 
 
@@ -14,8 +15,13 @@ def home(request):
 def teachers_index(request):
   teacher = Teacher.objects.filter(user=request.user)
   students = Child.objects.filter(teacher=request.user)
-  print(teacher)
-  return render(request,'teachers/index.html',{'teacher': teacher, 'students': students})
+  today = date.today()
+
+  for student in students:
+        attendance_today = student.attendance_set.filter(date=today)
+        student.attendance_today = attendance_today.exists()
+
+  return render(request, 'teachers/index.html', {'teacher': teacher, 'students': students})
 
 def guardians_index(request):
   guardians = Guardian.objects.all()
