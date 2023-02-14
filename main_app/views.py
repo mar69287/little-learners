@@ -139,7 +139,7 @@ class AssessmentDelete(DeleteView):
     return reverse_lazy('children_detail', kwargs={'pk': self.object.child.id})
 
 
-def feeding_create(request, child_id, behavior):
+def feeding_create(request, child_id, did_eat):
   child = Child.objects.get(id=child_id)
   feeding = Feeding(child=child, did_eat=did_eat)
   feeding.save()
