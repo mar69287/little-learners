@@ -9,6 +9,8 @@ from django.urls import reverse_lazy
 from .models import Teacher, Guardian, Child, Attendance, Assessment, Feeding
 
 
+
+
 # Create your views here.
 def home(request):
   return render(request, 'home.html')
@@ -69,7 +71,7 @@ def login_view(request):
 class ChildCreate(CreateView):
     model = Child
     fields = ['name', 'gender', 'DoB', 'allergies']
-
+    
     def form_valid(self, form):
       form.instance.teacher = self.request.user
       return super().form_valid(form)
@@ -79,7 +81,6 @@ class ChildList(ListView):
 
 class ChildDetail(DetailView):
     model = Child
-
     def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)
       context['guardians'] = self.object.guardian_set.all()
@@ -87,7 +88,7 @@ class ChildDetail(DetailView):
       context['assessment'] = Assessment.objects.filter(child=self.object)
       context['feeding'] = Feeding.objects.filter(child=self.object)
       return context
-
+  
 
 class ChildUpdate(UpdateView):
   model = Child
@@ -111,6 +112,13 @@ def attendance(request, child_id, status):
   attendance.save()
   return redirect('teachers_index')
 
+
+def assessments(request):
+  teacher = Teacher.objects.filter(user=request.user)
+  students = Child.objects.filter(teacher=request.user)
+  today = date.today()
+  return render(request, 'assessments/index.html', {'teacher': teacher, 'students': students})
+
 class AttendanceDelete(DeleteView):
   model = Attendance
   success_url = reverse_lazy('children_list')
@@ -131,6 +139,7 @@ class AssessmentDelete(DeleteView):
   def get_success_url(self):
     return reverse_lazy('children_detail', kwargs={'pk': self.object.child.id})
 
+
 def feeding_create(request, child_id, did_eat):
   child = Child.objects.get(id=child_id)
   feeding = Feeding(child=child, did_eat=did_eat)
@@ -143,3 +152,4 @@ class FeedingDelete(DeleteView):
 
   def get_success_url(self):
     return reverse_lazy('children_detail', kwargs={'pk': self.object.child.id})
+
