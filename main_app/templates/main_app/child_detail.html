@@ -87,7 +87,6 @@
             </div>
           </div>
         {% endfor %}
-  </div>
 
     <h3>Teacher Comments</h3>
       {% for comment in child.comment_set.all %}
@@ -99,7 +98,7 @@
               <p>{{comment.date}}</p>
             </div>
             <div class="card-action">
-              <a href="{% url 'feeding_delete' feeding.id %}">Delete</a>
+              <a href="{% url 'comment_delete' comment.id %}">Delete</a>
             </div>
           </div>
         {% endfor %}
