@@ -68,6 +68,32 @@
       </div>
     </div>     
       {% endif %}
+
+      {% for child in guardian.children.all %}
+  <ul>
+    <li>Attendance:
+      <ul>
+        {% for attendance in child.attendance_set.all %}
+          <li>{{ attendance.date }}: {{ attendance.status }}</li>
+        {% endfor %}
+      </ul>
+    </li>
+    <li>Assessments:
+      <ul>
+        {% for assessment in child.assessment_set.all %}
+          <li>{{ assessment.date }}: {{ assessment. }}</li>
+        {% endfor %}
+      </ul>
+    </li>
+    <li>Comments:
+      <ul>
+        {% for comment in child.comment_set.all %}
+          <li>{{ comment.date }}: {{ comment.message }}</li>
+        {% endfor %}
+      </ul>
+    </li>
+  </ul>
+{% endfor %}
       
     
 
