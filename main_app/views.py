@@ -107,13 +107,21 @@ def remove_child(request, guardian_id, child_id):
   Guardian.objects.get(id=guardian_id).children.remove(child_id)
   return redirect('guardians_detail', guardian_id=guardian_id)
 
-def add_comment(request, child_id):
-  form = CommentForm(request.POST)
-  if form.is_valid():
-    new_comment = form.save(commit=False)
-    new_comment.child_id = child_id
-    new_comment.save()
-  return redirect('children_detail', child_id=child_id)
+def add_comment(request):
+  if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+  else:
+    form = CommentForm()
+  return render(request, 'add_comment.html', {'form': form})
+  #form = CommentForm(request.POST)
+  #if form.is_valid():
+    #new_comment = form.save(commit=False)
+   # new_comment.child_id = child_id
+   # new_comment.save()
+ # return redirect('children_detail', child_id=child_id)
 
 def attendance(request, child_id, status):
   child = Child.objects.get(id=child_id)
