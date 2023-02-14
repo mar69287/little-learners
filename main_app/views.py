@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login
 from django.views.generic.edit import CreateView
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
@@ -11,28 +12,37 @@ from .models import Teacher, Guardian, Child, Attendance, Assessment, Feeding, C
 
 
 
-
-# Create your views here.
 def home(request):
   return render(request, 'home.html')
 
+@login_required
 def teachers_index(request):
-  teacher = Teacher.objects.filter(user=request.user)
-  students = Child.objects.filter(teacher=request.user)
-  today = date.today()
+  user = request.user
+  if hasattr(user, 'teacher'):
+    teacher = Teacher.objects.filter(user=request.user)
+    students = Child.objects.filter(teacher=request.user)
+    today = date.today()
 
-  for student in students:
-        attendance_today = student.attendance_set.filter(date=today)
-        student.attendance_today = attendance_today.exists()
-        assessment_today = student.assessment_set.filter(date=today)
-        student.assessment_today = assessment_today.exists()
+    for student in students:
+          attendance_today = student.attendance_set.filter(date=today)
+          student.attendance_today = attendance_today.exists()
+          assessment_today = student.assessment_set.filter(date=today)
+          student.assessment_today = assessment_today.exists()
 
-  return render(request, 'teachers/index.html', {'teacher': teacher, 'students': students})
+    return render(request, 'teachers/index.html', {'teacher': teacher, 'students': students})
+  else:
+    return redirect('dashboard')
 
+@login_required
 def guardians_index(request):
-  guardians = Guardian.objects.all()
-  return render(request,'guardians/index.html',{'guardians': guardians})
+  user = request.user
+  if hasattr(user, 'teacher'):
+    guardians = Guardian.objects.all()
+    return render(request,'guardians/index.html',{'guardians': guardians})
+  else:
+    return redirect('dashboard')
 
+@login_required
 def guardians_detail(request, guardian_id):
   guardian = Guardian.objects.get(id=guardian_id)
   id_list = guardian.children.all().values_list('id')
@@ -42,6 +52,7 @@ def guardians_detail(request, guardian_id):
     'children': children_guardian_doesnt_have
   })
 
+@login_required
 def dashboard(request):
   user = request.user
   if hasattr(user, 'teacher'):
@@ -69,7 +80,7 @@ def login_view(request):
     else:
         return render(request, 'login.html')
 
-class ChildCreate(CreateView):
+class ChildCreate(LoginRequiredMixin, CreateView):
     model = Child
     fields = ['name', 'gender', 'DoB', 'allergies']
     
@@ -77,10 +88,10 @@ class ChildCreate(CreateView):
       form.instance.teacher = self.request.user
       return super().form_valid(form)
 
-class ChildList(ListView):
+class ChildList(LoginRequiredMixin, ListView):
   model = Child
 
-class ChildDetail(DetailView):
+class ChildDetail(LoginRequiredMixin, DetailView):
     model = Child
     def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)
@@ -92,77 +103,119 @@ class ChildDetail(DetailView):
       return context
   
 
-class ChildUpdate(UpdateView):
+class ChildUpdate(LoginRequiredMixin, UpdateView):
   model = Child
   fields = ['name', 'gender', 'DoB', 'allergies']
 
-class ChildDelete(DeleteView):
+class ChildDelete(LoginRequiredMixin, DeleteView):
   model = Child
   success_url = '/children'
 
+@login_required
 def assoc_child(request, guardian_id, child_id):
-  Guardian.objects.get(id=guardian_id).children.add(child_id)
-  return redirect('guardians_detail', guardian_id=guardian_id)
+  user = request.user
+  if hasattr(user, 'teacher'):
+    Guardian.objects.get(id=guardian_id).children.add(child_id)
+    return redirect('guardians_detail', guardian_id=guardian_id)
+  else:
+    return redirect('dashboard')
+  
 
+@login_required
 def remove_child(request, guardian_id, child_id):
-  Guardian.objects.get(id=guardian_id).children.remove(child_id)
-  return redirect('guardians_detail', guardian_id=guardian_id)
+  user = request.user
+  if hasattr(user, 'teacher'):
+    Guardian.objects.get(id=guardian_id).children.remove(child_id)
+    return redirect('guardians_detail', guardian_id=guardian_id)
+  else:
+    return redirect('dashboard')
 
+@login_required
 def add_comment(request, child_id):
-  if request.method == 'POST':
-    form = CommentForm(request.POST)
-    if form.is_valid():
-      new_comment = form.save(commit=False)
-      new_comment.child_id = child_id
-      new_comment.save()
-  return redirect('children_detail', pk=child_id)
+  user = request.user
+  if hasattr(user, 'teacher'):
+    if request.method == 'POST':
+      form = CommentForm(request.POST)
+      if form.is_valid():
+        new_comment = form.save(commit=False)
+        new_comment.child_id = child_id
+        new_comment.save()
+    return redirect('children_detail', pk=child_id)
+  else:
+    return redirect('dashboard')
 
+@login_required
 def comment_delete(request, pk):
-  comment = Comment.objects.get(pk=pk)
-  child_id = comment.child.id
-  comment.delete()
-  return redirect('children_detail', pk=child_id)
+  user = request.user
+  if hasattr(user, 'teacher'):
+    comment = Comment.objects.get(pk=pk)
+    child_id = comment.child.id
+    comment.delete()
+    return redirect('children_detail', pk=child_id)
+  else:
+    return redirect('dashboard')
+  
 
+@login_required
 def attendance(request, child_id, status):
-  child = Child.objects.get(id=child_id)
-  attendance = Attendance(child=child, status=status)
-  attendance.save()
-  return redirect('teachers_index')
-
+  user = request.user
+  if hasattr(user, 'teacher'):
+    child = Child.objects.get(id=child_id)
+    attendance = Attendance(child=child, status=status)
+    attendance.save()
+    return redirect('teachers_index')
+  else:
+    return redirect('dashboard')
+  
+  
+@login_required
 def assessments(request):
-  teacher = Teacher.objects.filter(user=request.user)
-  students = Child.objects.filter(teacher=request.user)
-  today = date.today()
-  return render(request, 'assessments/index.html', {'teacher': teacher, 'students': students})
+  user = request.user
+  if hasattr(user, 'teacher'):
+    teacher = Teacher.objects.filter(user=request.user)
+    students = Child.objects.filter(teacher=request.user)
+    today = date.today()
+    return render(request, 'assessments/index.html', {'teacher': teacher, 'students': students})
+  else:
+    return redirect('dashboard')
 
-class AttendanceDelete(DeleteView):
+class AttendanceDelete(LoginRequiredMixin, DeleteView):
   model = Attendance
   success_url = reverse_lazy('children_list')
 
   def get_success_url(self):
     return reverse_lazy('children_detail', kwargs={'pk': self.object.child.id})
   
+@login_required
 def assessment_create(request, child_id, behavior):
-  child = Child.objects.get(id=child_id)
-  assessment = Assessment(child=child, behavior=behavior)
-  assessment.save()
-  return redirect('teachers_index')
+  user = request.user
+  if hasattr(user, 'teacher'):
+    child = Child.objects.get(id=child_id)
+    assessment = Assessment(child=child, behavior=behavior)
+    assessment.save()
+    return redirect('teachers_index')
+  else:
+    return redirect('dashboard')
 
-class AssessmentDelete(DeleteView):
+class AssessmentDelete(LoginRequiredMixin, DeleteView):
   model = Assessment
   success_url = reverse_lazy('children_list')
 
   def get_success_url(self):
     return reverse_lazy('children_detail', kwargs={'pk': self.object.child.id})
 
-
+@login_required
 def feeding_create(request, child_id, did_eat):
-  child = Child.objects.get(id=child_id)
-  feeding = Feeding(child=child, did_eat=did_eat)
-  feeding.save()
-  return redirect('teachers_index')
+  user = request.user
+  if hasattr(user, 'teacher'):
+    child = Child.objects.get(id=child_id)
+    feeding = Feeding(child=child, did_eat=did_eat)
+    feeding.save()
+    return redirect('teachers_index')
+  else:
+    return redirect('dashboard')
 
-class FeedingDelete(DeleteView):
+class FeedingDelete(LoginRequiredMixin, DeleteView):
   model = Feeding
   success_url = reverse_lazy('children_list')
 
