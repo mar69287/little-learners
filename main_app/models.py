@@ -93,3 +93,14 @@ class Assessment(models.Model):
 
   class Meta:
     ordering = ['-date']
+
+class Comment(models.Model):
+  message = models.CharField(max_length=200)
+  date = models.DateField(auto_now_add=True)
+  child = models.ForeignKey(Child, on_delete=models.CASCADE)
+
+  def __str__(self):
+        return f"{self.message} on {self.date}"
+
+  class Meta:
+    ordering = ['-date']
