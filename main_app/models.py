@@ -19,6 +19,11 @@ class Teacher(models.Model):
   name = models.CharField(max_length=100)
   user = models.OneToOneField(User, on_delete=models.CASCADE)
 
+  class Meta:
+    permissions = [
+      ("is_teacher", "can access teacher views")
+    ]
+
   def __str__(self):
         return self.name
 
