@@ -6,7 +6,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
 from datetime import date
 from django.urls import reverse_lazy
-from .models import Teacher, Guardian, Child, Attendance, Assessment, Feeding
+from .models import Teacher, Guardian, Child, Attendance, Assessment, Feeding, Comment
 
 
 
