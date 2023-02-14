@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login
 from django.views.generic.edit import CreateView
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
@@ -44,13 +44,14 @@ def guardians_index(request):
 
 @login_required
 def guardians_detail(request, guardian_id):
-  guardian = Guardian.objects.get(id=guardian_id)
-  id_list = guardian.children.all().values_list('id')
-  children_guardian_doesnt_have = Child.objects.exclude(id__in=id_list)
-  return render(request, 'guardians/details.html', {
-    'guardian': guardian,
-    'children': children_guardian_doesnt_have
-  })
+    guardian = Guardian.objects.get(id=guardian_id)
+    id_list = guardian.children.all().values_list('id')
+    children_guardian_doesnt_have = Child.objects.exclude(id__in=id_list)
+    return render(request, 'guardians/details.html', {
+      'guardian': guardian,
+      'children': children_guardian_doesnt_have
+    })
+
 
 @login_required
 def dashboard(request):
@@ -80,19 +81,29 @@ def login_view(request):
     else:
         return render(request, 'login.html')
 
-class ChildCreate(LoginRequiredMixin, CreateView):
+class ChildCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Child
     fields = ['name', 'gender', 'DoB', 'allergies']
+    permission_required = "main_app.is_teacher"
     
     def form_valid(self, form):
       form.instance.teacher = self.request.user
       return super().form_valid(form)
 
-class ChildList(LoginRequiredMixin, ListView):
-  model = Child
+    def handle_no_permission(self):
+        return redirect('dashboard')
 
-class ChildDetail(LoginRequiredMixin, DetailView):
+class ChildList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+  model = Child
+  permission_required = "main_app.is_teacher"
+
+  def handle_no_permission(self):
+        return redirect('dashboard')
+
+class ChildDetail(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     model = Child
+    permission_required = "main_app.is_teacher"
+
     def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)
       context['guardians'] = self.object.guardian_set.all()
@@ -101,15 +112,25 @@ class ChildDetail(LoginRequiredMixin, DetailView):
       context['feeding'] = Feeding.objects.filter(child=self.object)
       context['comment_form'] = CommentForm()
       return context
-  
+    
+    def handle_no_permission(self):
+        return redirect('dashboard')
 
-class ChildUpdate(LoginRequiredMixin, UpdateView):
+class ChildUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
   model = Child
   fields = ['name', 'gender', 'DoB', 'allergies']
+  permission_required = "main_app.is_teacher"
 
-class ChildDelete(LoginRequiredMixin, DeleteView):
+  def handle_no_permission(self):
+        return redirect('dashboard')
+
+class ChildDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
   model = Child
   success_url = '/children'
+  permission_required = "main_app.is_teacher"
+
+  def handle_no_permission(self):
+        return redirect('dashboard')
 
 @login_required
 def assoc_child(request, guardian_id, child_id):
@@ -179,12 +200,16 @@ def assessments(request):
   else:
     return redirect('dashboard')
 
-class AttendanceDelete(LoginRequiredMixin, DeleteView):
+class AttendanceDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
   model = Attendance
   success_url = reverse_lazy('children_list')
+  permission_required = "main_app.is_teacher"
 
   def get_success_url(self):
     return reverse_lazy('children_detail', kwargs={'pk': self.object.child.id})
+
+  def handle_no_permission(self):
+        return redirect('dashboard')
   
 @login_required
 def assessment_create(request, child_id, behavior):
@@ -197,12 +222,16 @@ def assessment_create(request, child_id, behavior):
   else:
     return redirect('dashboard')
 
-class AssessmentDelete(LoginRequiredMixin, DeleteView):
+class AssessmentDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
   model = Assessment
   success_url = reverse_lazy('children_list')
+  permission_required = "main_app.is_teacher"
 
   def get_success_url(self):
     return reverse_lazy('children_detail', kwargs={'pk': self.object.child.id})
+
+  def handle_no_permission(self):
+        return redirect('dashboard')
 
 @login_required
 def feeding_create(request, child_id, did_eat):
@@ -215,10 +244,14 @@ def feeding_create(request, child_id, did_eat):
   else:
     return redirect('dashboard')
 
-class FeedingDelete(LoginRequiredMixin, DeleteView):
+class FeedingDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
   model = Feeding
   success_url = reverse_lazy('children_list')
+  permission_required = "main_app.is_teacher"
 
   def get_success_url(self):
     return reverse_lazy('children_detail', kwargs={'pk': self.object.child.id})
+
+  def handle_no_permission(self):
+        return redirect('dashboard')
     
