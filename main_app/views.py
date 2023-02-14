@@ -129,7 +129,6 @@ def attendance(request, child_id, status):
   attendance.save()
   return redirect('teachers_index')
 
-
 def assessments(request):
   teacher = Teacher.objects.filter(user=request.user)
   students = Child.objects.filter(teacher=request.user)
@@ -169,4 +168,4 @@ class FeedingDelete(DeleteView):
 
   def get_success_url(self):
     return reverse_lazy('children_detail', kwargs={'pk': self.object.child.id})
-
+    
