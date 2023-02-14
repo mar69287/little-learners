@@ -5,7 +5,8 @@ from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
 from datetime import date
-from .models import Teacher, Guardian, Child, Attendance
+from django.urls import reverse_lazy
+from .models import Teacher, Guardian, Child, Attendance, Assessment
 
 
 # Create your views here.
@@ -20,6 +21,8 @@ def teachers_index(request):
   for student in students:
         attendance_today = student.attendance_set.filter(date=today)
         student.attendance_today = attendance_today.exists()
+        assessment_today = student.assessment_set.filter(date=today)
+        student.assessment_today = assessment_today.exists()
 
   return render(request, 'teachers/index.html', {'teacher': teacher, 'students': students})
 
@@ -80,6 +83,8 @@ class ChildDetail(DetailView):
     def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)
       context['guardians'] = self.object.guardian_set.all()
+      context['attendance'] = Attendance.objects.filter(child=self.object)
+      context['assessment'] = Assessment.objects.filter(child=self.object)
       return context
 
 
@@ -104,3 +109,23 @@ def attendance(request, child_id, status):
   attendance = Attendance(child=child, status=status)
   attendance.save()
   return redirect('teachers_index')
+
+class AttendanceDelete(DeleteView):
+  model = Attendance
+  success_url = reverse_lazy('children_list')
+
+  def get_success_url(self):
+    return reverse_lazy('children_detail', kwargs={'pk': self.object.child.id})
+  
+def assessment_create(request, child_id, behavior):
+  child = Child.objects.get(id=child_id)
+  assessment = Assessment(child=child, behavior=behavior)
+  assessment.save()
+  return redirect('teachers_index')
+
+class AssessmentDelete(DeleteView):
+  model = Assessment
+  success_url = reverse_lazy('children_list')
+
+  def get_success_url(self):
+    return reverse_lazy('children_detail', kwargs={'pk': self.object.child.id})

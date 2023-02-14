@@ -37,5 +37,35 @@
     {% else %}
       <h5>No Parents 😿</h5>
     {% endif %}
+
+    <h3>Attendances</h3>
+      {% for attendance in child.attendance_set.all %}
+          <div class="card">
+            <div class="card-content">
+              <span class="card-title">
+                 <span>{{attendance.status}} on {{attendance.date}}</span>
+              </span>
+            </div>
+            <div class="card-action">
+              <a href="{% url 'attendance_delete' attendance.id %}">Delete</a>
+            </div>
+          </div>
+        {% endfor %}
+
+    <h3>Assessments</h3>
+      {% for assessment in child.assessment_set.all %}
+          <div class="card">
+            <div class="card-content">
+              <span class="card-title">
+                 <span>{{assessment.behavior}} on {{assessment.date}}</span>
+              </span>
+            </div>
+            <div class="card-action">
+              <a href="{% url 'assessment_delete' assessment.id %}">Delete</a>
+            </div>
+          </div>
+        {% endfor %}
   </div>
+
+
 {% endblock %}

@@ -28,6 +28,15 @@
           <p>Attendance already marked</p>
         {% endif %}
       </div>
+      <div class="card-action">
+        {% if not student.assessment_today %}
+          <a href="{% url 'assessment_create' student.id 'Great' %}">Great</a>
+          <a href="{% url 'assessment_create' student.id 'Ok' %}">Ok</a>
+          <a href="{% url 'assessment_create' student.id 'Bad' %}">Tough Day</a>
+        {% else %}
+          <p>Assessment today submitted</p>
+        {% endif %}
+      </div>
     </div>
   </a>
 {% endfor %}
