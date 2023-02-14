@@ -6,6 +6,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
 from datetime import date
 from django.urls import reverse_lazy
+from .forms import CommentForm
 from .models import Teacher, Guardian, Child, Attendance, Assessment, Feeding, Comment
 
 
@@ -105,6 +106,14 @@ def assoc_child(request, guardian_id, child_id):
 def remove_child(request, guardian_id, child_id):
   Guardian.objects.get(id=guardian_id).children.remove(child_id)
   return redirect('guardians_detail', guardian_id=guardian_id)
+
+def add_comment(request, child_id):
+  form = CommentForm(request.POST)
+  if form.is_valid():
+    new_comment = form.save(commit=False)
+    new_comment.child_id = child_id
+    new_comment.save()
+  return redirect('children_detail', child_id=child_id)
 
 def attendance(request, child_id, status):
   child = Child.objects.get(id=child_id)
