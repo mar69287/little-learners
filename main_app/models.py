@@ -27,11 +27,6 @@ ACTIONS = (
   
 )
 
-BEHAVIOR = (
-   ('B','Bad'),
-   ('G','Good'),
-   ('O','Okay'),
-)
 class Teacher(models.Model):
   name = models.CharField(max_length=100)
   user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -100,13 +95,13 @@ class Attendance(models.Model):
   def __str__(self):
     return f"{self.status} on {self.date}"
 
-class Assessment(models.Model):
-  behavior = models.CharField(
-     max_length=1,
-     choices=BEHAVIOR,
-     default=BEHAVIOR[1][0]
-  )
-  date = models.DateField('Behavior date')
+  class Meta:
+    ordering = ['-date']
 
-def __str__(self):
-      return f"{self.get_behavior_display()} on {self.date}"
+class Assessment(models.Model):
+  behavior = models.CharField(max_length=10)
+  date = models.DateField(auto_now_add=True)
+  child = models.ForeignKey(Child, on_delete=models.CASCADE)
+
+  def __str__(self):
+        return f"{self.behavior} on {self.date}"
