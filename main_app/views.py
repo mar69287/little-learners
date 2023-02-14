@@ -122,21 +122,14 @@ def comment_delete(request, pk):
   child_id = comment.child.id
   comment.delete()
   return redirect('children_detail', pk=child_id)
+
 def add_comment(request):
-  if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('home')
-  else:
-    form = CommentForm()
-  return render(request, 'add_comment.html', {'form': form})
-  #form = CommentForm(request.POST)
-  #if form.is_valid():
-    #new_comment = form.save(commit=False)
-   # new_comment.child_id = child_id
-   # new_comment.save()
- # return redirect('children_detail', child_id=child_id)
+  form = CommentForm(request.POST)
+  if form.is_valid():
+    new_comment = form.save(commit=False)
+    new_comment.child_id = child_id
+    new_comment.save()
+  return redirect('children_detail',pk=child_id)
 
 def attendance(request, child_id, status):
   child = Child.objects.get(id=child_id)
