@@ -167,7 +167,7 @@ def attendance(request, child_id, status):
   else:
     return redirect('dashboard')
   
-
+  
 @login_required
 def assessments(request):
   user = request.user
@@ -221,4 +221,4 @@ class FeedingDelete(LoginRequiredMixin, DeleteView):
 
   def get_success_url(self):
     return reverse_lazy('children_detail', kwargs={'pk': self.object.child.id})
-
+    
