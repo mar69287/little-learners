@@ -18,6 +18,14 @@
       </div>
     </div>
   </div>
+
+  <div class="col s6">
+    <form action="{% url 'add_comment' child.id %}" method="POST">
+      {% csrf_token %}
+      {{ comment_form.as_p }}
+      <input type="submit" class="btn" value="Add Comment">
+    </form>
+  </div>
 </div>
 
 <hr>
@@ -35,7 +43,7 @@
         </div>
       {% endfor %}
     {% else %}
-      <h5>No Parents 😿</h5>
+      <h5>No Parents</h5>
     {% endif %}
 
     <h3>Attendances</h3>
@@ -76,6 +84,21 @@
             </div>
             <div class="card-action">
               <a href="{% url 'feeding_delete' feeding.id %}">Delete</a>
+            </div>
+          </div>
+        {% endfor %}
+
+    <h3>Teacher Comments</h3>
+      {% for comment in child.comment_set.all %}
+          <div class="card">
+            <div class="card-content">
+              <span class="card-title">
+                 <span>{{comment.message}}</span>
+              </span>
+              <p>{{comment.date}}</p>
+            </div>
+            <div class="card-action">
+              <a href="{% url 'comment_delete' comment.id %}">Delete</a>
             </div>
           </div>
         {% endfor %}
