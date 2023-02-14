@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login
 from django.views.generic.edit import CreateView
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
 from datetime import date
@@ -88,6 +88,7 @@ class ChildDetail(DetailView):
       context['attendance'] = Attendance.objects.filter(child=self.object)
       context['assessment'] = Assessment.objects.filter(child=self.object)
       context['feeding'] = Feeding.objects.filter(child=self.object)
+      context['comment_form'] = CommentForm()
       return context
   
 
@@ -108,12 +109,19 @@ def remove_child(request, guardian_id, child_id):
   return redirect('guardians_detail', guardian_id=guardian_id)
 
 def add_comment(request, child_id):
-  form = CommentForm(request.POST)
-  if form.is_valid():
-    new_comment = form.save(commit=False)
-    new_comment.child_id = child_id
-    new_comment.save()
-  return redirect('children_detail', child_id=child_id)
+  if request.method == 'POST':
+    form = CommentForm(request.POST)
+    if form.is_valid():
+      new_comment = form.save(commit=False)
+      new_comment.child_id = child_id
+      new_comment.save()
+  return redirect('children_detail', pk=child_id)
+
+def comment_delete(request, pk):
+  comment = Comment.objects.get(pk=pk)
+  child_id = comment.child.id
+  comment.delete()
+  return redirect('children_detail', pk=child_id)
 
 def attendance(request, child_id, status):
   child = Child.objects.get(id=child_id)
