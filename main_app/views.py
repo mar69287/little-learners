@@ -123,14 +123,6 @@ def comment_delete(request, pk):
   comment.delete()
   return redirect('children_detail', pk=child_id)
 
-def add_comment(request):
-  form = CommentForm(request.POST)
-  if form.is_valid():
-    new_comment = form.save(commit=False)
-    new_comment.child_id = child_id
-    new_comment.save()
-  return redirect('children_detail',pk=child_id)
-
 def attendance(request, child_id, status):
   child = Child.objects.get(id=child_id)
   attendance = Attendance(child=child, status=status)
@@ -176,3 +168,4 @@ class FeedingDelete(DeleteView):
 
   def get_success_url(self):
     return reverse_lazy('children_detail', kwargs={'pk': self.object.child.id})
+    
