@@ -24,4 +24,6 @@ urlpatterns = [
 
     path('assessments/<int:pk>/delete/', views.AssessmentDelete.as_view(), name='assessment_delete'),
     path('assessments/<int:child_id>/<str:behavior>/', views.assessment_create, name='assessment_create'),
+    path('feedings/<int:pk>/delete/', views.FeedingDelete.as_view(), name='feeding_delete'),
+    path('feedings/<int:child_id>/<str:did_eat>/', views.feeding_create, name='feeding_create'),
 

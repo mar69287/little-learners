@@ -65,6 +65,20 @@
             </div>
           </div>
         {% endfor %}
+
+    <h3>Skipped Meals</h3>
+      {% for feeding in child.feeding_set.all %}
+          <div class="card">
+            <div class="card-content">
+              <span class="card-title">
+                 <span>{{feeding.did_eat}} on {{feeding.date}}</span>
+              </span>
+            </div>
+            <div class="card-action">
+              <a href="{% url 'feeding_delete' feeding.id %}">Delete</a>
+            </div>
+          </div>
+        {% endfor %}
   </div>
 
 
