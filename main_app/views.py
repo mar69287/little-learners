@@ -105,3 +105,9 @@ def attendance(request, child_id, status):
   attendance = Attendance(child=child, status=status)
   attendance.save()
   return redirect('teachers_index')
+
+def assessments(request):
+  teacher = Teacher.objects.filter(user=request.user)
+  students = Child.objects.filter(teacher=request.user)
+  today = date.today()
+  return render(request, 'assessments/index.html', {'teacher': teacher, 'students': students})

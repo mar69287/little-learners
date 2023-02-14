@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Teachers</h1>
+
+{% for teacher in teacher %}
+
+    <div class="card">
+      <div class="card-content">
+        <span class="card-title">{{ teacher.name }}</span>
+      </div>
+    </div>
+
+{% endfor %}
+
+<h1>Students</h1>
+{% for student in students %}
+  <a href="{% url 'children_detail' student.id %}">
+    <div class="card">
+      <div class="card-content">
+        <span class="card-title">{{ student.name }}</span>
+      </div>
+      <div class="card-action">
+        {% if not student.attendance_today %}
+          <a href="{% url '{% extends 'base.html' %}
+{% block content %}
+
+<h1>Teachers</h1>
+
+{% for teacher in teacher %}
+
+    <div class="card">
+      <div class="card-content">
+        <span class="card-title">{{ teacher.name }}</span>
+      </div>
+    </div>
+
+{% endfor %}
+
+<h1>Students</h1>
+{% for student in students %}
+  <a href="{% url 'children_detail' student.id %}">
+    <div class="card">
+      <div class="card-content">
+        <span class="card-title">{{ student.name }}</span>
+      </div>
+      <div class="card-action">
+        {% if not student.attendance_today %}
+          <a href="{% url 'assessments' student.id 'good' %}">Good</a>
+          <a href="{% url 'assessments' student.id 'ok' %}">Ok</a>
+          <a href="{% url 'assessments' student.id 'bad' %}">Bad</a>
+        {% else %}
+          <p>Assessments already marked</p>
+        {% endif %}
+      </div>
+    </div>
+  </a>
+{% endfor %}
+
+{% endblock %}' student.id 'good' %}">Good</a>
+          <a href="{% url 'assessments' student.id 'absent' %}">Absent</a>
+        {% else %}
+          <p>Assessments already marked</p>
+        {% endif %}
+      </div>
+    </div>
+  </a>
+{% endfor %}
+
+{% endblock %}
