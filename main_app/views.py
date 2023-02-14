@@ -6,7 +6,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
 from datetime import date
 from django.urls import reverse_lazy
-from .models import Teacher, Guardian, Child, Attendance, Assessment
+from .models import Teacher, Guardian, Child, Attendance, Assessment, Feeding
 
 
 
@@ -86,6 +86,7 @@ class ChildDetail(DetailView):
       context['guardians'] = self.object.guardian_set.all()
       context['attendance'] = Attendance.objects.filter(child=self.object)
       context['assessment'] = Assessment.objects.filter(child=self.object)
+      context['feeding'] = Feeding.objects.filter(child=self.object)
       return context
   
 
@@ -137,3 +138,16 @@ class AssessmentDelete(DeleteView):
   def get_success_url(self):
     return reverse_lazy('children_detail', kwargs={'pk': self.object.child.id})
 
+
+def feeding_create(request, child_id, behavior):
+  child = Child.objects.get(id=child_id)
+  feeding = Feeding(child=child, did_eat=did_eat)
+  feeding.save()
+  return redirect('teachers_index')
+
+class FeedingDelete(DeleteView):
+  model = Feeding
+  success_url = reverse_lazy('children_list')
+
+  def get_success_url(self):
+    return reverse_lazy('children_detail', kwargs={'pk': self.object.child.id})
