@@ -1,21 +1,9 @@
 from django.db import models
 from django.urls import reverse
-from datetime import date
+from datetime import date, datetime
 from django.contrib.auth.models import User
 from django.utils import timezone
 
-
-MEALS = (
-  ('B', 'Breakfast - 9:00 am - 9:30 am'),
-  ('L', 'Lunch - 12:00 pm - 12:30 pm'),
-  ('S', 'Snack - 2:00 pm - 2:30 pm'),
-  
-)
-
-ATE = (
-    ('N', 'No'),
-    ('Y', 'Yes')
-)
 
 ACTIONS = (
   ('C', 'Coloring'),
@@ -74,18 +62,15 @@ class Activity(models.Model):
       return f"{self.get_action_display()} from {self.start_time} to {self.end_time}"
    
 class Feeding(models.Model):
-  meal = models.CharField(
-    max_length=1,
-    choices=MEALS,
-    default=MEALS[0][0]
-  ),
-  did_eat= models.CharField(
-    max_length=1,
-    choices=ATE,
-    default=ATE[1][0]
-  ),
+  did_eat= models.CharField(max_length=20)
+  child = models.ForeignKey(Child, on_delete=models.CASCADE)
+  date = models.DateField(auto_now_add=True)
+
   def __str__(self):
-    return f"child at {self.get_meal_display()} ate? {self.get_did_eat_display()}"
+    return f"child {self.did_eat} on {self.date}"
+
+  class Meta:
+    ordering = ['-date']
 
 class Attendance(models.Model):
   child = models.ForeignKey(Child, on_delete=models.CASCADE)
@@ -105,3 +90,6 @@ class Assessment(models.Model):
 
   def __str__(self):
         return f"{self.behavior} on {self.date}"
+
+  class Meta:
+    ordering = ['-date']

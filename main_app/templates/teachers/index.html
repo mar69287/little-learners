@@ -37,6 +37,11 @@
           <p>Assessment today submitted</p>
         {% endif %}
       </div>
+      <div class="card-action">
+          <a href="{% url 'feeding_create' student.id 'Skipped Breakfast' %}">No Breakfast</a>
+          <a href="{% url 'feeding_create' student.id 'Skipped Lunch' %}">No Lunch</a>
+          <a href="{% url 'feeding_create' student.id 'Skipped Snack' %}">No Snack</a>
+      </div>
     </div>
   </a>
 {% endfor %}
