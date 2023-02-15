@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
 from datetime import date
+from django.http import JsonResponse
 from django.urls import reverse_lazy
 from .forms import CommentForm
 from django.db.models import Q, Count
@@ -51,24 +52,12 @@ def guardians_index(request):
 
 @login_required
 def guardians_detail(request, guardian_id):
-    # guardian = Guardian.objects.get(id=guardian_id)
-    # id_list = guardian.children.all().values_list('id')
-    # children_guardian_doesnt_have = Child.objects.exclude(id__in=id_list)
-    # return render(request, 'guardians/details.html', {
-    #   'guardian': guardian,
-    #   'children': children_guardian_doesnt_have
-    # })
     guardian = Guardian.objects.get(id=guardian_id)
-    children = guardian.children.annotate(
-        present_count=Count('attendance', filter=Q(attendance__status='present')),
-        absent_count=Count('attendance', filter=Q(attendance__status='absent')),
-    )
-    present_count = Attendance.objects.filter(child__in=guardian.children.all(), status='present').count()
-    print(f"Present count: {present_count}")
-    print(children)
+    id_list = guardian.children.all().values_list('id')
+    children_guardian_doesnt_have = Child.objects.exclude(id__in=id_list)
     return render(request, 'guardians/details.html', {
-        'guardian': guardian,
-        'children': children,
+      'guardian': guardian,
+      'children': children_guardian_doesnt_have
     })
 
 
