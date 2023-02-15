@@ -47,14 +47,14 @@ nav>ul>li>a:hover {
   background-color: rgb(255, 255, 255);
 }
 
-.logo{
+.logo {
   height: 5.0rem;
   width: 9.0rem;
   padding: .2rem 0;
-  opacity:1.0;
+  opacity: 1.0;
   transition: 0.3s;
 }
-  
+
 
 .logo:hover {
   transform: scale(1.0);
@@ -210,4 +210,8 @@ nav>ul>li>a:hover {
 
 .main>a {
   width: 40%;
+}
+
+.home-page {
+  margin-top: 10rem;
 }
