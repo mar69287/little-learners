@@ -1,6 +1,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="teacher-main">
+  <div id="name-title">
+    <p style="font-size: 2rem;">Welcome</p>
+  </div>
+  <div class="collection">
+    <a href="{% url 'dashboard' %}">Dashboard</a>
+    <a href="{% url 'children_create' %}">Add Child</a>
+    <a href="{% url 'dashboard' %}">My Classroom</a>
+  </div>
+</div>
 
 <section class="main">
   <h1>Guardians</h1>
