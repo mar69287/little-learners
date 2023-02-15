@@ -1,49 +1,63 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>Teachers</h1>
+<div class="teacher-main">
+  <div id="name-title">
+    <p>Welcome</p>
+    {% for teacher in teacher %}
+    <h1>{{ teacher.name }}</h1>
+    {% endfor %}
+  </div>
+  <div class="collection">
+    <a href="{% url 'dashboard' %}">My Classroom</a>
+    <a href="{% url 'guardians_index' %}">Guardians</a>
+    <a href="{% url 'children_create' %}">Add Child</a>
+  </div>
+</div>
 
-{% for teacher in teacher %}
+<div class="teacher-content">
 
-    <div class="card">
-      <div class="card-content">
-        <span class="card-title">{{ teacher.name }}</span>
+  <h1>Students</h1>
+  {% for student in students %}
+      <div class="card">
+        <a href="{% url 'children_detail' student.id %}">
+          <div class="card-content flex">
+            <div class="name">
+              <h3 class="person-name">{{ student.name }}</h3>
+              <p>Date of Birth: {{student.DoB}}</p>
+            </div>
+            <div class="attendance">
+              {% if not student.attendance_today %}
+              <a href="{% url 'attendance' student.id 'present' %}">Present</a>
+              <a href="{% url 'attendance' student.id 'absent' %}">Absent</a>
+            {% else %}
+              <p>Attendance marked</p>
+            {% endif %}
+            </div>
+          </div>
+        </a>
+        <div class="card-action">
+          {% if not student.assessment_today %}
+            <a href="{% url 'assessment_create' student.id 'Great' %}">Great</a>
+            <a href="{% url 'assessment_create' student.id 'Ok' %}">Ok</a>
+            <a href="{% url 'assessment_create' student.id 'Bad' %}">Tough Day</a>
+          {% else %}
+            <p>Assessment today submitted</p>
+          {% endif %}
+        </div>
+        <div class="card-action">
+            {% if not student.feeding_skipped_breakfast_today %}
+            <a href="{% url 'feeding_create' student.id 'Skipped Breakfast' %}">No Breakfast</a>
+            {% endif %}
+            {% if not student.feeding_skipped_lunch_today %}
+            <a href="{% url 'feeding_create' student.id 'Skipped Lunch' %}">No Lunch</a>
+            {% endif %}
+            {% if not student.feeding_skipped_snack_today %}
+            <a href="{% url 'feeding_create' student.id 'Skipped Snack' %}">No Snack</a>
+            {% endif %}
+        </div>
       </div>
-    </div>
-
-{% endfor %}
-
-<h1>Students</h1>
-{% for student in students %}
-  <a href="{% url 'children_detail' student.id %}">
-    <div class="card">
-      <div class="card-content">
-        <span class="card-title">{{ student.name }}</span>
-      </div>
-      <div class="card-action">
-        {% if not student.attendance_today %}
-          <a href="{% url 'attendance' student.id 'present' %}">Present</a>
-          <a href="{% url 'attendance' student.id 'absent' %}">Absent</a>
-        {% else %}
-          <p>Attendance already marked</p>
-        {% endif %}
-      </div>
-      <div class="card-action">
-        {% if not student.assessment_today %}
-          <a href="{% url 'assessment_create' student.id 'Great' %}">Great</a>
-          <a href="{% url 'assessment_create' student.id 'Ok' %}">Ok</a>
-          <a href="{% url 'assessment_create' student.id 'Bad' %}">Tough Day</a>
-        {% else %}
-          <p>Assessment today submitted</p>
-        {% endif %}
-      </div>
-      <div class="card-action">
-          <a href="{% url 'feeding_create' student.id 'Skipped Breakfast' %}">No Breakfast</a>
-          <a href="{% url 'feeding_create' student.id 'Skipped Lunch' %}">No Lunch</a>
-          <a href="{% url 'feeding_create' student.id 'Skipped Snack' %}">No Snack</a>
-      </div>
-    </div>
-  </a>
-{% endfor %}
+  {% endfor %}
+</div>
 
 {% endblock %}
