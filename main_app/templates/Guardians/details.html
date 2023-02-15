@@ -68,7 +68,7 @@
       </div>
     </div>     
       {% endif %}
-
+      
       {% for child in guardian.children.all %}
   <ul>
     <li>Attendance:
@@ -81,7 +81,7 @@
     <li>Assessments:
       <ul>
         {% for assessment in child.assessment_set.all %}
-          <li>{{ assessment.date }}: {{ assessment. }}</li>
+          <li>{{ assessment.date }}: {{ assessment.behavior }}</li>
         {% endfor %}
       </ul>
     </li>
