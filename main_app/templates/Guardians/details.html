@@ -1,101 +1,103 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Guardians Details</h1>
+<section class="main">
+  <h1>Guardians Details</h1>
+  
 
-    <div class="row">
-    <div class="col s6">
-        <div class="card">
-        <div class="card-content">
-            <span class="card-title">{{ guardian.name }}</span>
-            <p>Relationship: {{ guardian.relationship }}</p>
-            <p>Address: {{guardian.address }}</p>
-            <p>Email: {{guardian.email}}</p>
+          <div class="card-content">
+              <span class="card-title">{{ guardian.name }}</span>
+              <p>Relationship: {{ guardian.relationship }}</p>
+              <p>Address: {{guardian.address }}</p>
+              <p>City: {{guardian.city}}</p>
+              <p>State: {{guardian.state}}</p>
+              <p>Zip Code: {{guardian.zip_code}}</p>
+          </div>
+          
+  
+      <hr>
+      <div class="row">
+        <div class="col s6">
+          <h3>{{ guardian.name }}'s Children</h3>
+          {% if guardian.children.count %}
+            {% for child in guardian.children.all %}
+              <div class="card">
+                <div class="card-content">
+                  <span class="card-title">
+                     <span>{{child.name}}</span> <br> DoB: {{ child.DoB }}
+                  </span>
+                </div>
+                {% if user.teacher %}
+                <div class="card-action">
+                  <form action="{% url 'remove_child' guardian.id child.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn">Remove</button>
+                  </form>
+                </div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          {% else %}
+            <h5>No Children</h5>
+          {% endif %}
         </div>
+  
+  
+              {% if user.guardian %}
+              {% for child in guardian.children.all %}
+          <ul>
+            <li>Attendance:
+              <ul>
+                {% for attendance in child.attendance_set.all %}
+                  <li>{{ attendance.date }}: {{ attendance.status }}</li>
+                {% endfor %}
+              </ul>
+            </li>
+            <li>Assessments:
+              <ul>
+                {% for assessment in child.assessment_set.all %}
+                  <li>{{ assessment.date }}: {{ assessment. }}</li>
+                {% endfor %}
+              </ul>
+            </li>
+            <li>Comments:
+              <ul>
+                {% for comment in child.comment_set.all %}
+                  <li>{{ comment.date }}: {{ comment.message }}</li>
+                {% endfor %}
+              </ul>
+            </li>
+          </ul>
+        {% endfor %}
+        {% endif %}
+  
+        {% if user.teacher %}
+        <div class="col s6">
+          <h3>Available Children</h3>
+          {% if children.count %}
+            {% for child in children.all %}
+              <div class="card">
+                <div class="card-content">
+                  <span class="card-title">
+                      <span>{{child.name}}</span> <br> DoB: {{ child.DoB }}
+                  </span>
+                </div>
+                <div class="card-action">
+                  <form action="{% url 'assoc_child' guardian.id child.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn">Add</button>
+                  </form>
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <h5>{{guardian.name}} All my kids</h5>
+          {% endif %}
         </div>
-    </div>
-    </div>
-
-    <hr>
-    <div class="row">
-      <div class="col s6">
-        <h3>{{ guardian.name }}'s Children</h3>
-        {% if guardian.children.count %}
-          {% for child in guardian.children.all %}
-            <div class="card">
-              <div class="card-content">
-                <span class="card-title">
-                   <span>{{child.name}}</span> <br> DoB: {{ child.DoB }}
-                </span>
-              </div>
-              {% if user.teacher %}
-              <div class="card-action">
-                <form action="{% url 'remove_child' guardian.id child.id %}" method="POST">
-                  {% csrf_token %}
-                  <button type="submit" class="btn">Remove</button>
-                </form>
-              </div>
-              {% endif %}
-            </div>
-          {% endfor %}
-        {% else %}
-          <h5>No Children</h5>
-        {% endif %}
       </div>
-
-
-      {% if user.teacher %}
-      <div class="col s6">
-        <h3>Available Children</h3>
-        {% if children.count %}
-          {% for child in children.all %}
-            <div class="card">
-              <div class="card-content">
-                <span class="card-title">
-                    <span>{{child.name}}</span> <br> DoB: {{ child.DoB }}
-                </span>
-              </div>
-              <div class="card-action">
-                <form action="{% url 'assoc_child' guardian.id child.id %}" method="POST">
-                  {% csrf_token %}
-                  <button type="submit" class="btn">Add</button>
-                </form>
-              </div>
-            </div>
-          {% endfor %}
-        {% else %}
-          <h5>{{guardian.name}} All my kids</h5>
         {% endif %}
-      </div>
-    </div>     
-      {% endif %}
-      
-      {% for child in guardian.children.all %}
-  <ul>
-    <li>Attendance:
-      <ul>
-        {% for attendance in child.attendance_set.all %}
-          <li>{{ attendance.date }}: {{ attendance.status }}</li>
-        {% endfor %}
-      </ul>
-    </li>
-    <li>Assessments:
-      <ul>
-        {% for assessment in child.assessment_set.all %}
-          <li>{{ assessment.date }}: {{ assessment.behavior }}</li>
-        {% endfor %}
-      </ul>
-    </li>
-    <li>Comments:
-      <ul>
-        {% for comment in child.comment_set.all %}
-          <li>{{ comment.date }}: {{ comment.message }}</li>
-        {% endfor %}
-      </ul>
-    </li>
-  </ul>
-{% endfor %}
-      
-    
+  
+  
+</section>
 
 
   {% endblock %}

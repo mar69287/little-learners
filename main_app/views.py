@@ -1,13 +1,14 @@
 from django.contrib.auth import authenticate, login
 from django.views.generic.edit import CreateView
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
 from datetime import date
 from django.urls import reverse_lazy
 from .forms import CommentForm
+from django.db.models import Q
 from .models import Teacher, Guardian, Child, Attendance, Assessment, Feeding, Comment
 
 
@@ -28,6 +29,12 @@ def teachers_index(request):
           student.attendance_today = attendance_today.exists()
           assessment_today = student.assessment_set.filter(date=today)
           student.assessment_today = assessment_today.exists()
+          feeding_skipped_breakfast = student.feeding_set.filter(Q(date=today) & Q(did_eat="Skipped Breakfast"))
+          student.feeding_skipped_breakfast_today = feeding_skipped_breakfast.exists()
+          feeding_skipped_lunch = student.feeding_set.filter(Q(date=today) & Q(did_eat="Skipped Lunch"))
+          student.feeding_skipped_lunch_today = feeding_skipped_lunch.exists()
+          feeding_skipped_snack = student.feeding_set.filter(Q(date=today) & Q(did_eat="Skipped Snack"))
+          student.feeding_skipped_snack_today = feeding_skipped_snack.exists()
 
     return render(request, 'teachers/index.html', {'teacher': teacher, 'students': students})
   else:
@@ -81,28 +88,37 @@ def login_view(request):
     else:
         return render(request, 'login.html')
 
-class ChildCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class ChildCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Child
     fields = ['name', 'gender', 'DoB', 'allergies']
-    permission_required = "main_app.is_teacher"
     
     def form_valid(self, form):
       form.instance.teacher = self.request.user
       return super().form_valid(form)
 
+    def test_func(self):
+        return hasattr(self.request.user, 'teacher')
+
     def handle_no_permission(self):
-        return redirect('dashboard')
+        if self.request.user.is_authenticated:
+            if not hasattr(self.request.user, 'teacher'):
+                return redirect('dashboard')
+        return super().handle_no_permission()
 
-class ChildList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+class ChildList(LoginRequiredMixin, UserPassesTestMixin, ListView):
   model = Child
-  permission_required = "main_app.is_teacher"
 
+  def test_func(self):
+        return hasattr(self.request.user, 'teacher')
+  
   def handle_no_permission(self):
-        return redirect('dashboard')
+        if self.request.user.is_authenticated:
+            if not hasattr(self.request.user, 'teacher'):
+                return redirect('dashboard')
+        return super().handle_no_permission()
 
-class ChildDetail(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+class ChildDetail(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = Child
-    permission_required = "main_app.is_teacher"
 
     def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)
@@ -112,25 +128,42 @@ class ChildDetail(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
       context['feeding'] = Feeding.objects.filter(child=self.object)
       context['comment_form'] = CommentForm()
       return context
-    
-    def handle_no_permission(self):
-        return redirect('dashboard')
 
-class ChildUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    def test_func(self):
+      return hasattr(self.request.user, 'teacher')
+      
+    def handle_no_permission(self):
+        if self.request.user.is_authenticated:
+            if not hasattr(self.request.user, 'teacher'):
+                return redirect('dashboard')
+        return super().handle_no_permission()
+    
+
+class ChildUpdate(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
   model = Child
   fields = ['name', 'gender', 'DoB', 'allergies']
-  permission_required = "main_app.is_teacher"
+  
+  def test_func(self):
+        return hasattr(self.request.user, 'teacher')
 
   def handle_no_permission(self):
-        return redirect('dashboard')
+        if self.request.user.is_authenticated:
+            if not hasattr(self.request.user, 'teacher'):
+                return redirect('dashboard')
+        return super().handle_no_permission()
 
-class ChildDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+class ChildDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
   model = Child
   success_url = '/children'
-  permission_required = "main_app.is_teacher"
+
+  def test_func(self):
+        return hasattr(self.request.user, 'teacher')
 
   def handle_no_permission(self):
-        return redirect('dashboard')
+        if self.request.user.is_authenticated:
+            if not hasattr(self.request.user, 'teacher'):
+                return redirect('dashboard')
+        return super().handle_no_permission()
 
 @login_required
 def assoc_child(request, guardian_id, child_id):
@@ -200,16 +233,22 @@ def assessments(request):
   else:
     return redirect('dashboard')
 
-class AttendanceDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+class AttendanceDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
   model = Attendance
   success_url = reverse_lazy('children_list')
-  permission_required = "main_app.is_teacher"
 
   def get_success_url(self):
     return reverse_lazy('children_detail', kwargs={'pk': self.object.child.id})
 
+  def test_func(self):
+        return hasattr(self.request.user, 'teacher')
+  
   def handle_no_permission(self):
-        return redirect('dashboard')
+        if self.request.user.is_authenticated:
+            if not hasattr(self.request.user, 'teacher'):
+                return redirect('dashboard')
+        return super().handle_no_permission()
+
   
 @login_required
 def assessment_create(request, child_id, behavior):
@@ -222,16 +261,22 @@ def assessment_create(request, child_id, behavior):
   else:
     return redirect('dashboard')
 
-class AssessmentDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+class AssessmentDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
   model = Assessment
   success_url = reverse_lazy('children_list')
-  permission_required = "main_app.is_teacher"
 
   def get_success_url(self):
     return reverse_lazy('children_detail', kwargs={'pk': self.object.child.id})
 
+  def test_func(self):
+        return hasattr(self.request.user, 'teacher')
+  
   def handle_no_permission(self):
-        return redirect('dashboard')
+        if self.request.user.is_authenticated:
+            if not hasattr(self.request.user, 'teacher'):
+                return redirect('dashboard')
+        return super().handle_no_permission()
+
 
 @login_required
 def feeding_create(request, child_id, did_eat):
@@ -244,14 +289,18 @@ def feeding_create(request, child_id, did_eat):
   else:
     return redirect('dashboard')
 
-class FeedingDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+class FeedingDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
   model = Feeding
   success_url = reverse_lazy('children_list')
-  permission_required = "main_app.is_teacher"
 
   def get_success_url(self):
     return reverse_lazy('children_detail', kwargs={'pk': self.object.child.id})
 
-  def handle_no_permission(self):
-        return redirect('dashboard')
+  def test_func(self):
+        return hasattr(self.request.user, 'teacher')
     
+  def handle_no_permission(self):
+        if self.request.user.is_authenticated:
+            if not hasattr(self.request.user, 'teacher'):
+                return redirect('dashboard')
+        return super().handle_no_permission()
