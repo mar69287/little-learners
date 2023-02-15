@@ -3,9 +3,13 @@
 {% load static %}
 
 {% if not user.teacher or user.guardian %}
-<div class="main">
-  <h1>Home</h1>
-</div>
+  {% if user.teacher or user.guardian %}
+  {% else %}
+  <div class="main">
+    <h1>Home</h1>
+  </div>
+  
+  {% endif %}
 {% endif %}
 
 {% if user.teacher or user.guardian %}
@@ -22,4 +26,5 @@
     <h1>home</h1>
 </div>
 {% endif %}
+
 {% endblock %} 
