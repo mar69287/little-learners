@@ -25,6 +25,7 @@
                         <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
                         <li><a href="{% url 'logout' %}">Log Out</a></li>
                         {% else %}
+                        <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
                         <li><a href="{% url 'logout' %}">Log Out</a></li>
                         {% endif %}
                     {% else %}                   
