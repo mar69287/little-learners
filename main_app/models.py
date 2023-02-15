@@ -100,7 +100,7 @@ class Assessment(models.Model):
     ordering = ['-date']
 
 class Comment(models.Model):
-  message = models.CharField(max_length=50)
+  message = models.TextField(max_length=200)
   date = models.DateTimeField(auto_now_add=True)
   child = models.ForeignKey(Child, on_delete=models.CASCADE)
 
