@@ -1,8 +1,19 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load static %}
-<h1>Home</h1>
+{% if user %}
+<div class="teacher-main">
+    <div id="name-title">
+      <p style="font-size: 2rem;">Welcome</p>
+    </div>
+    <div class="collection">
+      <a href="{% url 'dashboard' %}">Dashboard</a>
+    </div>
+  </div>
 
-<img src="{% static 'images/logo.png' %}" alt="">
+  {% endif %}
+  <div class="teacher-content">
+    <h1>home</h1>
+</div>
 
-{% endblock %}
+{% endblock %} 
