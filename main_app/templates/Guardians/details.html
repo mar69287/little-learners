@@ -1,85 +1,85 @@
 {% extends 'base.html' %}
 {% block content %}
-<section class="main">
-  <h1>Guardians Details</h1>
-  
+<div class="teacher-main">
+  <div id="name-title">
+    {% if user.guardian %}
+    <p>Welcome</p>
+    {% endif %}
+    <h1>{{ guardian.name }}</h1>
+  </div>
+  <div class="collection">
+    <p>Relationship: {{ guardian.relationship }}</p>
+    <p>Address: {{guardian.address }}</p>
+    <p>City: {{guardian.city}}</p>
+    <p>State: {{guardian.state}}</p>
+    <p>Zip Code: {{guardian.zip_code}}</p>
+  </div>
+</div>
 
-          <div class="card-content">
-              <span class="card-title">{{ guardian.name }}</span>
-              <p>Relationship: {{ guardian.relationship }}</p>
-              <p>Address: {{guardian.address }}</p>
-              <p>City: {{guardian.city}}</p>
-              <p>State: {{guardian.state}}</p>
-              <p>Zip Code: {{guardian.zip_code}}</p>
-          </div>
-          
-  
-      <hr>
-      <div class="row">
-        <div class="col s6">
-          <h3>{{ guardian.name }}'s Children</h3>
-          {% if guardian.children.count %}
-            {% for child in guardian.children.all %}
-              <div class="card">
-                <div class="card-content">
-                  <span class="card-title">
-                     <span>{{child.name}}</span> <br> DoB: {{ child.DoB }}
-                  </span>
-                </div>
-                {% if user.teacher %}
-                <div class="card-action">
-                  <form action="{% url 'remove_child' guardian.id child.id %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit" class="btn">Remove</button>
-                  </form>
-                </div>
-                {% endif %}
+  <div class="teacher-content">
+    {% if guardian.children.count %}
+      {% for child in guardian.children.all %}
+        <div class="card">
+            <div class="card-content flex">
+              <div class="name">
+                <h3 class="person-name">{{ child.name }}</h3>
+                <p>Date of Birth: {{child.DoB}}</p>
+                <p>Allergies: {{child.allergies}}</p>
               </div>
-            {% endfor %}
-          {% else %}
-            <h5>No Children</h5>
-          {% endif %}
-        </div>
-  
-  
-              {% if user.guardian %}
-              {% for child in guardian.children.all %}
-          <ul>
-            <li>Attendance:
-              <ul>
-                {% for attendance in child.attendance_set.all %}
-                  <li>{{ attendance.date }}: {{ attendance.status }}</li>
-                {% endfor %}
-              </ul>
-            </li>
-            <li>Assessments:
-              <ul>
-                {% for assessment in child.assessment_set.all %}
+            </div>
+            {% if user.guardian %}
+              <div class="card-action">
+                <p>Attendance:</p>
+                <ul>
+                  {% for attendance in child.attendance_set.all %}
+                    <li>{{ attendance.date }}: {{ attendance.status }}</li>
+                  {% endfor %}
+                </ul>
+                <p>Assessments:</p>
+                <ul>
+                  {% for assessment in child.assessment_set.all %}
                   <li>{{ assessment.date }}: {{ assessment.behavior }}</li>
-                {% endfor %}
-              </ul>
-            </li>
-            <li>Comments:
-              <ul>
-                {% for comment in child.comment_set.all %}
-                  <li>{{ comment.date }}: {{ comment.message }}</li>
-                {% endfor %}
-              </ul>
-            </li>
-          </ul>
-        {% endfor %}
-        {% endif %}
+                  {% endfor %}
+                </ul>
+                <p>Skipped Meals:</p>
+                <ul>
+                  {% for meal in child.feeding_set.all %}
+                    <li>{{ meal.date }}: {{ meal.did_eat }}</li>
+                  {% endfor %}
+                </ul>
+                <p>Teacher Comments:</p>
+                <ul>
+                  {% for comment in child.comment_set.all %}
+                    <li>{{ comment.date }}: {{ comment.message }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
+            {% if user.teacher %}
+              <div class="card-action">
+                <form action="{% url 'remove_child' guardian.id child.id %}" method="POST">
+                  {% csrf_token %}
+                  <button type="submit" class="btn">Remove</button>
+                </form>
+              </div>
+            {% endif %}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+      
   
         {% if user.teacher %}
         <div class="col s6">
-          <h3>Available Children</h3>
+          <h3>Assign Children</h3>
           {% if children.count %}
             {% for child in children.all %}
               <div class="card">
-                <div class="card-content">
-                  <span class="card-title">
-                      <span>{{child.name}}</span> <br> DoB: {{ child.DoB }}
-                  </span>
+                <div class="card-content flex">
+                  <div class="name">
+                    <h3 class="person-name">{{ child.name }}</h3>
+                    <p>Date of Birth: {{child.DoB}}</p>
+                  </div>
                 </div>
                 <div class="card-action">
                   <form action="{% url 'assoc_child' guardian.id child.id %}" method="POST">
@@ -97,6 +97,7 @@
         {% endif %}
   
   
-</section>
+
+
 
 {% endblock %}
