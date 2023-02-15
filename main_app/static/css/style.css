@@ -215,3 +215,72 @@ nav>ul>li>a:hover {
 .home-page {
   margin-top: 10rem;
 }
+
+
+
+
+h1{
+  font-size: medium;
+}
+.shape_effect div {
+  z-index: 2;
+}
+.shape_effect .plane {
+  position: absolute;
+  bottom: 5%;
+  right: -7%;
+  width: 15%;
+  
+}
+.shape_effect .sun {
+  position: absolute;
+  bottom: 13%;
+  left: 10%;
+  width: 70px;
+}
+
+
+.shape_effect .shape1 {
+  position: absolute;
+  top: 7%;
+  left: 55%;
+}
+.shape_effect .shape2 {
+  position: absolute;
+  top: 35%;
+  left: 2%;
+  width: 5%;
+}
+
+.shape_effect .shape5 {
+  position: absolute;
+  top: 5%;
+  right: 10%;
+}
+
+.card {
+  max-width: 300px;
+  height:100%;
+
+  margin: auto;
+  text-align: center;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  display:inline-grid;
+  flex-direction: row;
+  top: 3rem;
+  left: 3rem;
+  margin: -3rem 0 0 16rem;
+ 
+}
+
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.container {
+  display: flex; 
+  flex-flow: row wrap;
+  padding: 2px 16px;
+}
