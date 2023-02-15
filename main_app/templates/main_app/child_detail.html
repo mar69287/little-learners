@@ -1,108 +1,93 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>Child Details</h1>
-
-<div class="row">
-  <div class="col s6 col-offset-3">
-    <div class="card">
-      <div class="card-content">
-        <span class="card-title">{{ child.name }}</span>
-        <p>Date of Birth: {{ child.DoB }}</p>
-        <p>Gender: {{ child.gender }}</p>
-        <p>Allergies: {{ child.allergies }}</p>
-      </div>
-      <div class="card-action">
-        <a href="{% url 'children_update' child.id %}">Edit</a>
-        <a href="{% url 'children_delete' child.id %}">Delete</a>
-      </div>
-    </div>
+<div class="teacher-main">
+  <div id="name-title">
+    <h1>{{ child.name }}</h1>
   </div>
-
+  <div class="collection">
+    {% if guardians %}
+    {% for guardian in guardians %}
+    <p>Parent: {{ guardian.name }}</p>
+    {% endfor %}
+    {% endif %}
+    <p>Date of Birth: {{ child.DoB }}</p>
+    <p>Gender: {{ child.gender }}</p>
+    <p>Allergies: {{ child.allergies }}</p>
+  </div>
   <div class="col s6">
-    <form action="{% url 'add_comment' child.id %}" method="POST">
+    <form style="padding: .5rem;" action="{% url 'add_comment' child.id %}" method="POST">
       {% csrf_token %}
       {{ comment_form.as_p }}
       <input type="submit" class="btn" value="Add Comment">
     </form>
   </div>
+  <div class="child-settings">
+    <a href="{% url 'children_update' child.id %}">Edit</a>
+    <a href="{% url 'children_delete' child.id %}">Delete</a>
+  </div>
 </div>
 
-<hr>
-<div class="row">
-  <div class="col s6">
-    <h3>{{ child.name}}'s Parents</h3>
-    {% if guardians %}
-    {% for guardian in guardians %}
-        <div class="card">
-          <div class="card-content">
-            <span class="card-title">
-              <span >{{ guardian.name }}</span> 
-            </span>
-          </div>
-        </div>
-      {% endfor %}
-    {% else %}
-      <h5>No Parents</h5>
-    {% endif %}
+<div class="teacher-content">
 
-    <h3>Attendances</h3>
-      {% for attendance in child.attendance_set.all %}
-          <div class="card">
-            <div class="card-content">
-              <span class="card-title">
-                 <span>{{attendance.status}} on {{attendance.date}}</span>
-              </span>
+      <h3>Attendances</h3>
+        {% for attendance in child.attendance_set.all %}
+            <div class="card">
+              <div class="card-content">
+                <span class="card-title">
+                  <span>{{attendance.status}} on {{attendance.date}}</span>
+                </span>
+              </div>
+              <div class="card-action">
+                <a href="{% url 'attendance_delete' attendance.id %}">Delete</a>
+              </div>
             </div>
-            <div class="card-action">
-              <a href="{% url 'attendance_delete' attendance.id %}">Delete</a>
-            </div>
-          </div>
-        {% endfor %}
+          {% endfor %}
 
-    <h3>Assessments</h3>
-      {% for assessment in child.assessment_set.all %}
-          <div class="card">
-            <div class="card-content">
-              <span class="card-title">
-                 <span>{{assessment.behavior}} on {{assessment.date}}</span>
-              </span>
+      <h3>Assessments</h3>
+        {% for assessment in child.assessment_set.all %}
+            <div class="card">
+              <div class="card-content">
+                <span class="card-title">
+                  <span>{{assessment.behavior}} on {{assessment.date}}</span>
+                </span>
+              </div>
+              <div class="card-action">
+                <a href="{% url 'assessment_delete' assessment.id %}">Delete</a>
+              </div>
             </div>
-            <div class="card-action">
-              <a href="{% url 'assessment_delete' assessment.id %}">Delete</a>
-            </div>
-          </div>
-        {% endfor %}
+          {% endfor %}
 
-    <h3>Skipped Meals</h3>
-      {% for feeding in child.feeding_set.all %}
-          <div class="card">
-            <div class="card-content">
-              <span class="card-title">
-                 <span>{{feeding.did_eat}} on {{feeding.date}}</span>
-              </span>
+      <h3>Skipped Meals</h3>
+        {% for feeding in child.feeding_set.all %}
+            <div class="card">
+              <div class="card-content">
+                <span class="card-title">
+                  <span>{{feeding.did_eat}} on {{feeding.date}}</span>
+                </span>
+              </div>
+              <div class="card-action">
+                <a href="{% url 'feeding_delete' feeding.id %}">Delete</a>
+              </div>
             </div>
-            <div class="card-action">
-              <a href="{% url 'feeding_delete' feeding.id %}">Delete</a>
-            </div>
-          </div>
-        {% endfor %}
+          {% endfor %}
 
-    <h3>Teacher Comments</h3>
-      {% for comment in child.comment_set.all %}
-          <div class="card">
-            <div class="card-content">
-              <span class="card-title">
-                 <span>{{comment.message}}</span>
-              </span>
-              <p>{{comment.date}}</p>
+      <h3>Teacher Comments</h3>
+        {% for comment in child.comment_set.all %}
+            <div class="card">
+              <div class="card-content">
+                <span class="card-title">
+                  <span>{{comment.message}}</span>
+                </span>
+                <p>{{comment.date}}</p>
+              </div>
+              <div class="card-action">
+                <a href="{% url 'comment_delete' comment.id %}">Delete</a>
+              </div>
             </div>
-            <div class="card-action">
-              <a href="{% url 'comment_delete' comment.id %}">Delete</a>
-            </div>
-          </div>
-        {% endfor %}
-  </div>
+          {% endfor %}
+    </div>
+</div>
 
 
 {% endblock %}

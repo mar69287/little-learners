@@ -12,11 +12,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </head>
 <body>
-    <header class="navbar-fixed">
+    <header>
         <nav>
-            <div class="nav-wrapper">
+            
                 <ul>
-                    <li><a href="{% url 'home' %}" class="left brand-logo">&nbsp;&nbsp;Little Learners</a></li>
+                    <li><a href="{% url 'home' %}" class="left brand-logo">&nbsp;&nbsp;<img class="logo" src="{% static 'images/logo.jpg' %}" alt=""></a></li>
                 </ul>
                 <ul class="right">
 
@@ -35,10 +35,10 @@
                     <li><a href="{% url 'login' %}">Login</a></li>
                     {% endif %}
                   </ul>
-            </div>
+            
         </nav>
     </header>
-    <main class="container">
+    <main>
         {% block content %}
         {% endblock %}
     </main>
