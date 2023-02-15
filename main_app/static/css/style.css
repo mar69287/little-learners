@@ -33,7 +33,7 @@ nav {
 nav>ul>li>a {
   display: flex;
   align-items: center;
-  height: 6rem;
+  height: 5rem;
   display: flex;
   align-items: center;
   font-size: 1.7rem;
@@ -47,10 +47,18 @@ nav>ul>li>a:hover {
   background-color: rgb(255, 255, 255);
 }
 
-.logo {
-  height: 5.5rem;
-  width: 9.5rem;
+.logo{
+  height: 5.0rem;
+  width: 9.0rem;
   padding: .2rem 0;
+  opacity:1.0;
+  transition: 0.3s;
+}
+  
+
+.logo:hover {
+  transform: scale(1.0);
+  opacity: 0.5;
 }
 
 .teacher-main {

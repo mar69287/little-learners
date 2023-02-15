@@ -15,9 +15,10 @@
 <body>
     <header>
         <nav>
+        
             
                 <ul>
-                    <li><a href="{% url 'home' %}" class="left brand-logo">&nbsp;&nbsp;<img class="logo" src="{% static 'images/logo.jpg' %}" alt=""></a></li>
+                    <li><a href="{% url 'home' %}" class="">&nbsp;&nbsp;<img class="logo" src="{% static 'images/logo.jpg' %}" alt=""></a></li>
                 </ul>
                 <ul class="right">
 
@@ -26,7 +27,6 @@
                         <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
                         <li><a href="{% url 'logout' %}">Log Out</a></li>
                         {% else %}
-                        <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
                         <li><a href="{% url 'logout' %}">Log Out</a></li>
                         {% endif %}
                     {% else %}                   
