@@ -219,22 +219,19 @@ nav>ul>li>a:hover {
 
 
 
-h1 {
+h1{
   font-size: medium;
 }
-
 .shape_effect div {
   z-index: 2;
 }
-
 .shape_effect .plane {
   position: absolute;
   bottom: 5%;
   right: -7%;
   width: 15%;
-
+  
 }
-
 .shape_effect .sun {
   position: absolute;
   bottom: 13%;
@@ -248,7 +245,6 @@ h1 {
   top: 7%;
   left: 55%;
 }
-
 .shape_effect .shape2 {
   position: absolute;
   top: 35%;
@@ -262,29 +258,32 @@ h1 {
   right: 10%;
 }
 
-.home-card {
-  max-width: 300px;
-  height:100%;
-
+.card-home {
+  width: 300px;
+  height:600px;
   margin: auto;
   text-align: center;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   transition: 0.3s;
-  display:inline-grid;
   flex-direction: row;
-  top: 3rem;
-  left: 3rem;
-  margin: -3rem 0 16rem;
+  /* margin: -50px 0 0 300px; */
+  justify-content: space-between;
+  display:flex;
+  flex-wrap: wrap;
  
 }
 
 
-.home-card:hover {
+.card-home:hover {
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
-.home-container {
-  display: flex; 
-  flex-wrap: nowrap;
+.container-home {
   padding: 2px 16px;
 }
+
+.flex-container{
+  display:flex;
+  justify-content: space-between;
+}
+
