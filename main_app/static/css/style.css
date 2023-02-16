@@ -258,7 +258,7 @@ h1{
   right: 10%;
 }
 
-.card {
+.home-card {
   max-width: 300px;
   height:100%;
 
@@ -270,17 +270,17 @@ h1{
   flex-direction: row;
   top: 3rem;
   left: 3rem;
-  margin: -3rem 0 0 16rem;
+  margin: -3rem 0 16rem;
  
 }
 
 
-.card:hover {
+.home-card:hover {
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
-.container {
+.home-container {
   display: flex; 
-  flex-flow: row wrap;
+  flex-wrap: nowrap;
   padding: 2px 16px;
 }
