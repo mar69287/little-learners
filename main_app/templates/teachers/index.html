@@ -12,12 +12,13 @@
     <a href="{% url 'dashboard' %}">My Classroom</a>
     <a href="{% url 'guardians_index' %}">Guardians</a>
     <a href="{% url 'children_create' %}">Add Child</a>
+    <a href="{% url 'task_create' %}">Add Activity</a>
   </div>
 </div>
 
 <div class="teacher-content">
 
-  <h1>Students</h1>
+
   {% for student in students %}
       <div class="card">
         <a href="{% url 'children_detail' student.id %}">
