@@ -10,7 +10,7 @@ from django.http import JsonResponse
 from django.urls import reverse_lazy
 from .forms import CommentForm
 from django.db.models import Q, Count
-from .models import Teacher, Guardian, Child, Attendance, Assessment, Feeding, Comment
+from .models import Teacher, Guardian, Child, Attendance, Assessment, Feeding, Comment, Task, AssignActivity
 
 
 
@@ -304,6 +304,19 @@ class FeedingDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return hasattr(self.request.user, 'teacher')
     
   def handle_no_permission(self):
+        if self.request.user.is_authenticated:
+            if not hasattr(self.request.user, 'teacher'):
+                return redirect('dashboard')
+        return super().handle_no_permission()
+
+class TaskCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    model = Task
+    fields = ['name']
+    
+    def test_func(self):
+        return hasattr(self.request.user, 'teacher')
+
+    def handle_no_permission(self):
         if self.request.user.is_authenticated:
             if not hasattr(self.request.user, 'teacher'):
                 return redirect('dashboard')

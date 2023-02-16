@@ -16,16 +16,6 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Activity',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('action', models.CharField(choices=[('C', 'Coloring'), ('M', 'Music'), ('N', 'Nap'), ('R', 'Reading'), ('P', 'Play'), ('W', 'Writing')], default='C', max_length=1)),
-                ('start_time', models.DateTimeField(blank=True, default=django.utils.timezone.now, null=True)),
-                ('end_time', models.DateTimeField(blank=True, null=True)),
-                ('comment', models.CharField(max_length=250)),
-            ],
-        ),
-        migrations.CreateModel(
             name='Child',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),

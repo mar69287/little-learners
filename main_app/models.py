@@ -5,16 +5,6 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 
 
-ACTIONS = (
-  ('C', 'Coloring'),
-  ('M', 'Music'),
-  ('N', 'Nap'),
-  ('R', 'Reading'),
-  ('P', 'Play'),
-  ('W', 'Writing'),
-  
-)
-
 class Teacher(models.Model):
   name = models.CharField(max_length=100)
   user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -53,18 +43,22 @@ class Guardian(models.Model):
   def __str__(self):
      return self.name
   
-class Activity(models.Model):
-   action = models.CharField(
-      max_length=1,
-      choices=ACTIONS,
-      default=ACTIONS[0][0]
-   )
-   start_time = models.DateTimeField(blank=True, null=True, default=timezone.now)
-   end_time = models.DateTimeField(blank=True, null=True, )
-   comment = models.CharField(max_length=250)
+class Task(models.Model):
+  name = models.CharField(max_length=20)
 
-   def __str__(self):
-      return f"{self.get_action_display()} from {self.start_time} to {self.end_time}"
+  def __str__(self):
+      return f"{self.name}" 
+
+class AssignActivity(models.Model):
+  name = models.CharField(max_length=20)
+  child = models.ForeignKey(Child, on_delete=models.CASCADE)
+  date = models.DateField(auto_now_add=True)
+
+  def __str__(self):
+      return f"{self.name}" 
+
+  class Meta:
+    ordering = ['-date']
    
 class Feeding(models.Model):
   did_eat= models.CharField(max_length=20)
