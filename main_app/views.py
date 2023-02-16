@@ -160,6 +160,9 @@ class ChildDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
   model = Child
   success_url = '/children'
 
+  def get_success_url(self):
+    return reverse_lazy('dashboard')
+
   def test_func(self):
         return hasattr(self.request.user, 'teacher')
 
@@ -337,6 +340,9 @@ class TaskList(LoginRequiredMixin, UserPassesTestMixin, ListView):
 class TaskUpdate(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
   model = Task
   fields = ['name']
+
+  def get_success_url(self):
+    return reverse_lazy('tasks_index')
   
   def test_func(self):
         return hasattr(self.request.user, 'teacher')
@@ -352,7 +358,7 @@ class TaskDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
   success_url = reverse_lazy('tasks_list')
 
   def get_success_url(self):
-    return reverse_lazy('tasks_detail', kwargs={'pk': self.object.task.id})
+    return reverse_lazy('tasks_index')
 
   def test_func(self):
         return hasattr(self.request.user, 'teacher')

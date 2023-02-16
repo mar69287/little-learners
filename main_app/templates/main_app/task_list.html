@@ -12,19 +12,24 @@
     <a href="{% url 'dashboard' %}">My Classroom</a>
     <a href="{% url 'guardians_index' %}">Guardians</a>
     <a href="{% url 'children_create' %}">Add Child</a>
-    
+    <a href="{% url 'task_create' %}">Create Activity</a>
   </div>
 </div>
 
-
-{% for activity in activity_list %}
+<div class="teacher-content">
+{% for task in task_list %}
   <a href="{% url 'tasks_index' %}">
     <div class="card">
         <div class="card-content">
-            <span class="card-title">{{ activity.name }}</span>
+            <span class="card-title">{{ task.name }}</span>
+        </div>
+        <div class="card-content">
+            <a href="{% url 'tasks_update' task.id %}">Edit</a>
+            <a href="{% url 'tasks_delete' task.id %}">Delete</a>
         </div>
     </div>
   </a>
 {% endfor %}
+</div>
 
 {% endblock %}
