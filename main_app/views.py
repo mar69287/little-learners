@@ -321,3 +321,44 @@ class TaskCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
             if not hasattr(self.request.user, 'teacher'):
                 return redirect('dashboard')
         return super().handle_no_permission()
+
+class TaskList(LoginRequiredMixin, UserPassesTestMixin, ListView):
+  model = Task
+
+  def test_func(self):
+        return hasattr(self.request.user, 'teacher')
+  
+  def handle_no_permission(self):
+        if self.request.user.is_authenticated:
+            if not hasattr(self.request.user, 'teacher'):
+                return redirect('dashboard')
+        return super().handle_no_permission()
+
+class TaskUpdate(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+  model = Task
+  fields = ['name']
+  
+  def test_func(self):
+        return hasattr(self.request.user, 'teacher')
+
+  def handle_no_permission(self):
+        if self.request.user.is_authenticated:
+            if not hasattr(self.request.user, 'teacher'):
+                return redirect('dashboard')
+        return super().handle_no_permission()
+
+class TaskDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+  model = Task
+  success_url = reverse_lazy('tasks_list')
+
+  def get_success_url(self):
+    return reverse_lazy('tasks_detail', kwargs={'pk': self.object.task.id})
+
+  def test_func(self):
+        return hasattr(self.request.user, 'teacher')
+    
+  def handle_no_permission(self):
+        if self.request.user.is_authenticated:
+            if not hasattr(self.request.user, 'teacher'):
+                return redirect('dashboard')
+        return super().handle_no_permission()
