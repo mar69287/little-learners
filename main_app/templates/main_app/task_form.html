@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="teacher-main">
+  <div id="name-title">
+    <p style="font-size: 2rem;">Welcome</p>
+  </div>
+  <div class="collection">
+
+    <a href="{% url 'dashboard' %}">My Classroom</a>
+    <a href="{% url 'guardians_index' %}">Guardians</a>
+    <a href="{% url 'children_create' %}">Add Child</a>
+  </div>
+</div>
+
+
+<section class="main">
+  {% if object %}
+    <h1>Edit <span class="teal-text">{{ object.name }}</span></h1>
+  {% else %}
+    <h1>Add Activity</h1>
+  {% endif %}
+  
+  
+  <form action="" method="POST">
+    {% csrf_token %}
+    <table>
+      {{ form.as_table }}
+    </table>
+    <input type="submit" value="Submit!" class="btn">
+  </form>
+</section>
+
+{% endblock %}
