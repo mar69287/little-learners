@@ -15,7 +15,10 @@ from .models import Teacher, Guardian, Child, Attendance, Assessment, Feeding, C
 
 
 def home(request):
-  return render(request, 'home.html')
+  if request.user.is_authenticated:
+    return redirect('dashboard')
+  else:
+    return render(request, 'home.html')
 
 @login_required
 def teachers_index(request):
