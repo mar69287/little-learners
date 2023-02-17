@@ -19,6 +19,7 @@
   <div class="teacher-content">
     {% if guardian.children.count %}
       {% for child in guardian.children.all %}
+      <a href="{% url 'children_detail' child.id %}">
         <div class="card">
             <div class="card-content flex">
               <div class="name">
@@ -27,6 +28,7 @@
                 <p>Allergies: {{child.allergies}}</p>
               </div>
             </div>
+        </a>
             {% if user.guardian %}
               <div class="card-action">
                 <p>Attendance:</p>
@@ -74,6 +76,7 @@
           <h3>Assign Children</h3>
           {% if children.count %}
             {% for child in children.all %}
+            <a href="{% url 'children_detail' child.id %}">
               <div class="card">
                 <div class="card-content flex">
                   <div class="name">
@@ -88,6 +91,7 @@
                   </form>
                 </div>
               </div>
+            </a>
             {% endfor %}
           {% else %}
             <h5>{{guardian.name}} All my kids</h5>
