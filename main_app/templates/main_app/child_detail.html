@@ -58,7 +58,7 @@
             </div>
           {% endfor %}
 
-      <h3>Skipped Meals</h3>
+        <h3>Skipped Meals</h3>
         {% for feeding in child.feeding_set.all %}
             <div class="card">
               <div class="card-content">
@@ -68,6 +68,20 @@
               </div>
               <div class="card-action">
                 <a href="{% url 'feeding_delete' feeding.id %}">Delete</a>
+              </div>
+            </div>
+          {% endfor %}
+
+        <h3>Class Activities</h3>
+        {% for activity in child.assignactivity_set.all %}
+            <div class="card">
+              <div class="card-content">
+                <span class="card-title">
+                  <span>{{activity.name}} on {{activity.date}}</span>
+                </span>
+              </div>
+              <div class="card-action">
+                <a href="{% url 'assignactivity_delete' activity.id %}">Delete</a>
               </div>
             </div>
           {% endfor %}

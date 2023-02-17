@@ -57,6 +57,11 @@
             <a href="{% url 'feeding_create' student.id 'Skipped Snack' %}">No Snack</a>
             {% endif %}
         </div>
+        <div class="card-action">
+          {% for task in tasks %}
+          <a href="{% url 'assignactivity_create' student.id task.name %}">{{ task.name }}</a>
+          {% endfor %}
+        </div>
       </div>
   {% endfor %}
 </div>
