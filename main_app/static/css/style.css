@@ -216,13 +216,54 @@ nav>ul>li>a:hover {
   margin-top: 10rem;
 }
 
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-30px);
+
+  }
+  to {
+    transform: translateX(0);
+  }
+
+}
+
+.move{
+  animation-name: slideInLeft;
+  animation-duration: 2s;
+  animation-timing-function: ease-in;
+  animation-delay: 0s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-fill-mode: none;
+
+  transform: translateX(-150px)
+}
 
 h1 {
   font-size: medium;
 }
 
+
+
+.rotate {
+  
+  animation: rotation 7s infinite linear;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  
+  }
+
+  
+}
 .shape_effect div {
   z-index: 2;
+  
 }
 
 .shape_effect .plane {
@@ -230,7 +271,7 @@ h1 {
   bottom: 5%;
   right: -7%;
   width: 15%;
-
+  z-index: 5;
 }
 
 .shape_effect .sun {
