@@ -43,7 +43,7 @@ def teachers_index(request):
           for task in tasks:
                 activity_today = AssignActivity.objects.filter(Q(child=student) & Q(name=task.name) & Q(date=today))
                 task.already_done = activity_today.exists()
-                print(f"{student} Task {task.name} already done: {task.already_done}")
+               
 
     return render(request, 'teachers/index.html', {'teacher': teacher, 'students': students, 'tasks': tasks})
   else:
@@ -137,7 +137,7 @@ class ChildDetail(LoginRequiredMixin, UserPassesTestMixin, DetailView):
       context['feeding'] = Feeding.objects.filter(child=self.object)
       context['activity'] = AssignActivity.objects.filter(child=self.object)
       context['comment_form'] = CommentForm()
-      print(context['activity'])
+
       return context
     
     def test_func(self):
