@@ -27,6 +27,8 @@ def teachers_index(request):
     teacher = Teacher.objects.filter(user=request.user)
     students = Child.objects.filter(teacher=request.user)
     today = date.today()
+    tasks = Task.objects.all()
+    print(tasks)
 
     for student in students:
           attendance_today = student.attendance_set.filter(date=today)
@@ -40,7 +42,7 @@ def teachers_index(request):
           feeding_skipped_snack = student.feeding_set.filter(Q(date=today) & Q(did_eat="Skipped Snack"))
           student.feeding_skipped_snack_today = feeding_skipped_snack.exists()
 
-    return render(request, 'teachers/index.html', {'teacher': teacher, 'students': students})
+    return render(request, 'teachers/index.html', {'teacher': teacher, 'students': students, 'tasks': tasks})
   else:
     return redirect('dashboard')
 
@@ -130,9 +132,11 @@ class ChildDetail(LoginRequiredMixin, UserPassesTestMixin, DetailView):
       context['attendance'] = Attendance.objects.filter(child=self.object)
       context['assessment'] = Assessment.objects.filter(child=self.object)
       context['feeding'] = Feeding.objects.filter(child=self.object)
+      context['activity'] = AssignActivity.objects.filter(child=self.object)
       context['comment_form'] = CommentForm()
+      print(context['activity'])
       return context
-
+    
     def test_func(self):
       return hasattr(self.request.user, 'teacher')
       
@@ -359,6 +363,33 @@ class TaskDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
   def get_success_url(self):
     return reverse_lazy('tasks_index')
+
+  def test_func(self):
+        return hasattr(self.request.user, 'teacher')
+    
+  def handle_no_permission(self):
+        if self.request.user.is_authenticated:
+            if not hasattr(self.request.user, 'teacher'):
+                return redirect('dashboard')
+        return super().handle_no_permission()
+
+@login_required
+def activity_create(request, child_id, name):
+  user = request.user
+  if hasattr(user, 'teacher'):
+    child = Child.objects.get(id=child_id)
+    activity = AssignActivity(child=child, name=name)
+    activity.save()
+    return redirect('teachers_index')
+  else:
+    return redirect('dashboard')
+
+class ActivityDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+  model = AssignActivity
+  success_url = reverse_lazy('dashboard')
+
+  def get_success_url(self):
+    return reverse_lazy('dashboard')
 
   def test_func(self):
         return hasattr(self.request.user, 'teacher')
