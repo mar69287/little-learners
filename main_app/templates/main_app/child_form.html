@@ -15,7 +15,7 @@
 </div>
 
 
-<section class="main">
+<section class="create">
   {% if object %}
     <h1>Edit <span class="teal-text">{{ object.name }}</span></h1>
   {% else %}
@@ -23,13 +23,17 @@
   {% endif %}
   
   
-  <form action="" method="POST">
-    {% csrf_token %}
-    <table>
-      {{ form.as_table }}
-    </table>
-    <input type="submit" value="Submit!" class="btn">
-  </form>
+  <div class="form">
+    <form action="" method="POST">
+      {% csrf_token %}
+      <table>
+        {{ form.as_table }}
+      </table>
+      <input type="submit" value="Submit!" class="btn">
+    </form>
+  </div>
+  <img style="position:absolute; left: 30rem;  bottom: 15rem;" src="https://demo.yolotheme.com/giraffe/wp-content/themes/yolo-giraffe/assets/images/shape/sun.png" class="rotate">
+  <img style="position:absolute; right: 4rem;  top: 20rem;" src="https://demo.yolotheme.com/giraffe/wp-content/themes/yolo-giraffe/assets/images/shape/plane.png" class="move">
 </section>
 
 {% endblock %}

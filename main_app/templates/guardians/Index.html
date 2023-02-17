@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 <div class="teacher-main">
@@ -8,7 +9,10 @@
   <div class="collection">
     <a href="{% url 'dashboard' %}">My Classroom</a>
     <a href="{% url 'children_create' %}">Add Child</a>
+    <a href="{% url 'tasks_index' %}">Activities</a>
+    <a href="{% url 'task_create' %}">Create Activity</a>
   </div>
+  <img class="children" src="{% static 'images/children.png' %}" alt="">
 </div>
 
 <section class="teacher-content">  

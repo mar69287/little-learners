@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+{% load static %}
 
 <div class="teacher-main">
   <div id="name-title">
@@ -26,6 +27,7 @@
     <a href="{% url 'children_update' child.id %}">Edit</a>
     <a href="{% url 'children_delete' child.id %}">Delete</a>
   </div>
+  <img class="children" src="{% static 'images/children.png' %}" alt="">
 </div>
 
 <div class="teacher-content">
