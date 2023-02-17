@@ -28,7 +28,6 @@ def teachers_index(request):
     students = Child.objects.filter(teacher=request.user)
     today = date.today()
     tasks = Task.objects.all()
-    print(tasks)
 
     for student in students:
           attendance_today = student.attendance_set.filter(date=today)
@@ -41,6 +40,10 @@ def teachers_index(request):
           student.feeding_skipped_lunch_today = feeding_skipped_lunch.exists()
           feeding_skipped_snack = student.feeding_set.filter(Q(date=today) & Q(did_eat="Skipped Snack"))
           student.feeding_skipped_snack_today = feeding_skipped_snack.exists()
+          for task in tasks:
+                activity_today = AssignActivity.objects.filter(Q(child=student) & Q(name=task.name) & Q(date=today))
+                task.already_done = activity_today.exists()
+                print(f"{student} Task {task.name} already done: {task.already_done}")
 
     return render(request, 'teachers/index.html', {'teacher': teacher, 'students': students, 'tasks': tasks})
   else:

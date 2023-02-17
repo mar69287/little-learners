@@ -59,7 +59,9 @@
         </div>
         <div class="card-action">
           {% for task in tasks %}
-          <a href="{% url 'assignactivity_create' student.id task.name %}">{{ task.name }}</a>
+            {% if not task.already_done %}
+            <a href="{% url 'assignactivity_create' student.id task.name %}">{{ task.name }}</a>
+            {% endif %}
           {% endfor %}
         </div>
       </div>
